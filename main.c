@@ -1,7 +1,9 @@
 /*
+ * main.c
+ * 
+ * WinSecCheck.
  *
- *
- *
+ * - thesnoom 2018
  */
 
 #include <Windows.h>
@@ -9,8 +11,14 @@
 
 int main(int argc, char **argv)
 {
-	printf("%d\n", sizeof('A'));
-	getch();
+	printf( "+-----------------------+\n"
+			"+      WinSecCheck      +\n"
+			"+-----------------------+\n"
+			"+      - thesnoom       +\n"
+			"+        @GitHub        +\n"
+			"+-----------------------+\n\n");
+
+
 
 	return 0;
 }
