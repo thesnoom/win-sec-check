@@ -1,0 +1,41 @@
+INFORMATIONAL:
+	- Get windows version information (Server? Workstation?)
+	- Hostname
+	- x86/x64? | processors | RAM
+	- Get patch information
+	- current privileges
+	- attempt to get SeDebugPrivilege
+
+	- Get users & Groups
+		- NetQueryDisplayInformation / NetUserEnum / NetGroupEnum
+		- NetUserGetLocalGroups
+		- NetLocalGroupEnum && NetLocalGroupGetMembers
+	
+	
+	NetGetAnyDCName / NetGetDCName / DsGetDcName
+	- Is domain connected & List DCs? - NetServerEnum / DsEnumerateDomainTrustsA
+		- Get domain groups && users
+			- http://ivbel.blogspot.com/2012/01/how-to-list-all-users-groups-of-domain.html		
+			- NetUseEnum - Servers connected to local
+
+			
+SECURITY:	
+	- Insecure services
+		- Unquoted Paths
+			- Check permissions on all iterations if found
+		- Insecure Registry Permissions
+		- Insecure Service Permissions
+		- Insecure File Permissions
+			- Check EXE permissions of service path
+
+	- AlwaysInstallElevated
+	- Task Scheduler (<= XP/2003)
+
+	- Stored credentials / Left over
+		- {Unattend,sysprep}.{xml,inf,ini}
+		- GPP
+
+	- Process list
+	- Named pipes
+	- Autologon User Credential
+	- Tokens?
