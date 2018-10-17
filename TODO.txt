@@ -39,3 +39,20 @@ SECURITY:
 	- Named pipes
 	- Autologon User Credential
 	- Tokens?
+
+
+https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
+https://toshellandback.com/2015/11/24/ms-priv-esc/
+http://www.exumbraops.com/penetration-testing-102-windows-privilege-escalation-cheatsheet/
+https://stackoverflow.com/questions/29944745/get-osversion-in-windows-using-c
+https://github.com/fdiskyou/incognito2
+https://www.blackhat.com/docs/eu-17/materials/eu-17-Atkinson-A-Process-Is-No-One-Hunting-For-Token-Manipulation.pdf
+http://www.blakewatts.com/namedpipepaper.html
+https://medium.com/@rahmatnurfauzi/windows-privilege-escalation-scripts-techniques-30fa37bd194
+https://stackoverflow.com/questions/481759/enumerating-named-pipes-in-windows
+https://labs.mwrinfosecurity.com/assets/resourceFiles/DefCon25-UAC-0day-All-Day-v2.2.pdf
+http://ivbel.blogspot.com/2012/01/how-to-list-all-users-groups-of-domain.html
+https://stackoverflow.com/questions/2877295/get-os-in-c-win32-for-all-versions-of-win
+https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/ns-wdm-_osversioninfoexw
+http://www.rohitab.com/discuss/topic/24252-ntfs-directcopy-method-from-napalm/
+https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
