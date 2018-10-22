@@ -10,14 +10,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
-#include "getopt.h"
-#include "log.h"
-
-
-void help()
-{
-	//
-}
+#include "sysinfo.h"
 
 
 int main(int argc, char **argv)
@@ -29,32 +22,9 @@ int main(int argc, char **argv)
 			"+        @GitHub        +\n"
 			"+-----------------------+\n\n");
 
-
-	static struct option long_opts[] =
-	{
-		{"help",		no_argument, 0, 'h'},
-		{"verbose",		no_argument, 0, 'v'},
-		{0, 0, 0, 0}
-	};
-
-	int opt_idx = 0, c = 0, verbosity = 0;
-
-	while((c = getopt_long(argc, argv, "v", long_opts, &opt_idx)) != -1)
-	{
-		switch(c)
-		{
-			case 'h':
-			{
-				help();
-				return 0;
-			}
-
-			case 'v':
-			{
-				verbosity++;
-			}
-		}
-	}
+	printf("[+] Outputting system information:\n");
+	DisplayWinVerInfo();
+	DisplayCoreInfo();
 
 	return 0;
 }
