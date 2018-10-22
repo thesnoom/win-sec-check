@@ -26,6 +26,8 @@ int main(int argc, char **argv)
 	DisplayWinVerInfo();
 	DisplayCoreInfo();
 
+	getch();
+
 	return 0;
 }
 

@@ -8,6 +8,8 @@
 
 
 #pragma comment(lib, "netapi32.lib")
+#pragma warning(disable : 4731)
+
 
 #include <Windows.h>
 #include <LM.h>
