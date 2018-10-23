@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 
+// Iterate through all tokens in current process
 void LoopTokens( void )
 {
 	HANDLE hCurrProc;
@@ -22,6 +23,7 @@ void LoopTokens( void )
 
 		DWORD dwPrivLen, dwNameLen = 64, dwDispLen = 256, i, dwNull, privSet;
 
+		// Get current privileges
 		if(GetTokenInformation(hCurrProc, TokenPrivileges, tokenPrivs, 1024, &dwPrivLen))
 		{
 			for(i = 0; i < ((TOKEN_PRIVILEGES *)tokenPrivs)->PrivilegeCount; i++)
@@ -36,6 +38,7 @@ void LoopTokens( void )
 
 				printf("- %s\n", finalDisplay);
 			}
+
 		} else {
 			printf("[!] GetTokenInformation (%d) :: Error querying token privileges.\n", GetLastError());
 		}

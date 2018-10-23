@@ -94,7 +94,7 @@ void DisplayCoreInfo( void )
 
 
 // RtlGetVersion() :: https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/nf-wdm-rtlgetversion
-// Since microsoft broke GetVersionEx >= W8.1, this is the best method.
+// Since Microsoft broke GetVersionEx >= W8.1, this is the best method.
 void DisplayWinVerInfo( void )
 {
 	OSVERSIONINFOEXW osVer	= { 0 };
@@ -162,12 +162,16 @@ void DisplayWinVerInfo( void )
 				RegGetValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ReleaseId", RRF_RT_ANY, NULL, (void *)&szProdVer, &dwProdSize);
 
 				char finalDisp[256] = { 0 };
-				snprintf(finalDisp, sizeof(finalDisp), "%s %s - %d.%d.%d (%s)\n", szProdName, szProdVer, osVer.dwMajorVersion, osVer.dwMinorVersion, osVer.dwBuildNumber, szNtType);
+				if(szProdVer[0] != '\0')
+					snprintf(finalDisp, sizeof(finalDisp), "%s %s - %d.%d.%d (%s)\n", szProdName, szProdVer, osVer.dwMajorVersion, osVer.dwMinorVersion, osVer.dwBuildNumber, szNtType);
+				else
+					snprintf(finalDisp, sizeof(finalDisp), "%s - %d.%d.%d (%s)\n", szProdName, osVer.dwMajorVersion, osVer.dwMinorVersion, osVer.dwBuildNumber, szNtType);
 
 				printf("- %-20s %s", "System Version:", finalDisp);
 
 				ZeroMemory(finalDisp, sizeof(finalDisp));
 				snprintf(finalDisp, sizeof(finalDisp), "%d.%d (%s)\n", osVer.wServicePackMajor, osVer.wServicePackMinor, szServPack);
+
 				printf("- %-20s %s", "Service Pack:", finalDisp);
 			}
 
