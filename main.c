@@ -30,12 +30,14 @@ int main(int argc, char **argv)
 	DisplayCoreInfo();
 
 	printf("\n[+] Listing current user information:\n");
-	UserFromToken();
+	CurrentUserFromToken();
 	ListTokenUserGroups();
 
 	printf("\n[+] Listing current process privileges:\n");
 	LoopTokens();
 
+	printf("\n[+] Listing running processes:\n");
+	DisplayProcesses();
 
 	getch();
 

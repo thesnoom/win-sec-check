@@ -14,7 +14,7 @@
 
 
 // Grab username from token. Cred: Incognito
-void UserFromToken( void )
+void CurrentUserFromToken( void )
 {
 	HANDLE hCurrProc;
 	if(OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hCurrProc))
@@ -39,6 +39,35 @@ void UserFromToken( void )
 		CloseHandle(hCurrProc);
 	} else 
 		printf("[!] OpenProcessToken (%d) :: Error opening process token for reading username.\n", GetLastError());
+}
+
+
+// To retrieve a token and thus a user from a process ID.
+void UserFromPID( DWORD dwProcID, char *szUserOut )
+{
+	/*HANDLE hCurrProc;
+	if(OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hCurrProc))
+	{
+		void *tokenUser[1024] = { 0 };
+		char szUser[64] = { 0 }, szDomain[256] = { 0 };
+		DWORD dwUserLen, dwDomLen, dwTokeLen, dwSidType = 0;
+
+		if(GetTokenInformation(hCurrProc, TokenUser, tokenUser, 1024, &dwTokeLen))
+		{
+			LookupAccountSidA(NULL, ((TOKEN_USER *)tokenUser)->User.Sid, szUser, &dwUserLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
+
+			printf("- %-16s %s\\\\%s\n", "Token User:", szDomain, szUser);
+
+			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); i++)
+				printf("-");
+			printf("\n");
+
+		} else
+			printf("[!] GetTokenInformation (%d) :: Error querying token user.\n", GetLastError());
+
+		CloseHandle(hCurrProc);
+	} else
+		printf("[!] OpenProcessToken (%d) :: Error opening process token for reading username.\n", GetLastError());*/
 }
 
 
@@ -73,6 +102,7 @@ void ListTokenUserGroups( void )
 		printf("[!] OpenProcessToken (%d) :: Error opening process token for reading username.\n", GetLastError());
 }
 
+
 // Iterate through all tokens in current process. Cred: Incognito
 void LoopTokens( void )
 {
@@ -94,7 +124,7 @@ void LoopTokens( void )
 				LookupPrivilegeNameA(NULL, &(((TOKEN_PRIVILEGES *)tokenPrivs)->Privileges[i].Luid), privName, &dwNameLen);
 				LookupPrivilegeDisplayNameA(NULL, privName, privDisp, &dwDispLen, &dwNull);
 
-				printf("- %-45s %-12s %s\n", privName, (privSet & SE_PRIVILEGE_ENABLED ? "Enabled" : "Disabled"), privDisp);
+				printf("- %-38s %-10s %s\n", privName, (privSet & SE_PRIVILEGE_ENABLED ? "Enabled" : "Disabled"), privDisp);
 			}
 
 		} else 

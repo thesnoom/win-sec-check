@@ -6,8 +6,6 @@
  * - thesnoom 2018
  */
 
-
-#pragma comment(lib, "netapi32.lib")
 #pragma warning(disable : 4731)
 
 
@@ -16,10 +14,14 @@
 #include <stdlib.h>
 
 #include "sysinfo.h"
+#include "token.h"
 
 
-typedef LONG (WINAPI * RtlGetVer)(OSVERSIONINFOEXW *);
+typedef LONG (WINAPI *RtlGetVer)(OSVERSIONINFOEXW *);
+typedef LONG (WINAPI *NtQuerySystemInfo)(DWORD SystemInformationClass, VOID *SystemInformation, DWORD SystemInformationLength, DWORD *ReturnLength);
+
 #define STATUS_SUCCESS 0x00000000
+#define STATUS_INFO_LENGTH_MISMATCH ((LONG)0xC0000004L)
 
 
 // Detect HT and use GetSystemInfo to display phy/log cores.
@@ -106,6 +108,7 @@ void DisplayWinVerInfo( void )
 	{
 		printf("[!] LoadLibrary (%d) :: Error getting handle to ntdll.\n", GetLastError());
 		return;
+
 	} else {
 		RtlGetVersion = (RtlGetVer)GetProcAddress(hNtDLL, "RtlGetVersion");
 		if(RtlGetVersion)
@@ -182,3 +185,71 @@ void DisplayWinVerInfo( void )
 	}
 }
 
+
+// Utilise NtQuerySystemInformation to list process information
+void DisplayProcesses(void)
+{
+	HMODULE hNtDLL = NULL;
+	NtQuerySystemInfo NtQuerySystemInformation = NULL;
+
+	hNtDLL = LoadLibraryA("ntdll.dll");
+	if(!hNtDLL)
+	{
+		printf("[!] LoadLibrary (%d) :: Error getting handle to ntdll.\n", GetLastError());
+		return;
+
+	} else {
+		NtQuerySystemInformation = (NtQuerySystemInfo)GetProcAddress(hNtDLL, "NtQuerySystemInformation");
+		if(NtQuerySystemInformation)
+		{
+			SYSTEM_PROCESS_INFORMATION *pSysProcInf = NULL, *pSysProcHead = NULL;
+			DWORD dwSysProcLen = (sizeof(SYSTEM_PROCESS_INFORMATION) * 128);
+			LONG ntRet = 0x00;
+			BOOL bMore = TRUE;
+
+			pSysProcInf = (SYSTEM_PROCESS_INFORMATION *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwSysProcLen);
+			if(!pSysProcInf)
+			{
+				printf("[!] HeapAlloc (%d) :: Error allocating System Process Information.\n", GetLastError());
+
+				FreeLibrary(hNtDLL);
+				return;
+			}
+
+			ntRet = NtQuerySystemInformation(5, pSysProcInf, dwSysProcLen, &dwSysProcLen);
+
+			while(ntRet == STATUS_INFO_LENGTH_MISMATCH)
+			{
+				HeapFree(GetProcessHeap(), 0, pSysProcInf);
+				pSysProcInf = (SYSTEM_PROCESS_INFORMATION *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwSysProcLen);
+				ntRet = NtQuerySystemInformation(5, pSysProcInf, dwSysProcLen, &dwSysProcLen);
+			}
+
+			pSysProcHead = pSysProcInf;
+
+			if(ntRet == STATUS_SUCCESS)
+			{
+				while(bMore)
+				{
+					if(!pSysProcInf->NextEntryOffset)
+						bMore = !bMore;
+
+					char szProcUser[64] = { 0 };
+
+					//UserFromPID((DWORD)pSysProcInf->UniqueProcessId, szProcUser);
+
+					printf("-- T: %X -- %ws\n", (DWORD)pSysProcInf->UniqueProcessId, pSysProcInf->ImageName.Buffer);
+					
+					pSysProcInf = (SYSTEM_PROCESS_INFORMATION *)((DWORD)pSysProcInf + (DWORD)pSysProcInf->NextEntryOffset);
+				}
+			} 
+
+			HeapFree(GetProcessHeap(), 0, pSysProcHead);
+
+		} else
+			printf("[!] GetProcAddress (%d) :: NtQuerySystemInformation API address.\n", GetLastError());
+
+		FreeLibrary(hNtDLL);
+
+	}
+}
