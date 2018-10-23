@@ -6,10 +6,10 @@
  * - thesnoom 2018
  */
 
+#pragma warning(disable : 4996)
+
 
 #include <Windows.h>
-#include <winnt.h>
-
 #include <stdio.h>
 
 
@@ -21,7 +21,7 @@ void CurrentUserFromToken( void )
 	{
 		void *tokenUser[1024] = { 0 };
 		char szUser[64] = { 0 }, szDomain[256] = { 0 };
-		DWORD dwUserLen, dwDomLen, dwTokeLen, dwSidType = 0;
+		DWORD dwUserLen = 64, dwDomLen = 256, dwTokeLen, dwSidType = 0;
 
 		if(GetTokenInformation(hCurrProc, TokenUser, tokenUser, 1024, &dwTokeLen))
 		{
@@ -45,29 +45,33 @@ void CurrentUserFromToken( void )
 // To retrieve a token and thus a user from a process ID.
 void UserFromPID( DWORD dwProcID, char *szUserOut )
 {
-	/*HANDLE hCurrProc;
-	if(OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hCurrProc))
+	HANDLE hProcToken = NULL, hProc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwProcID);
+	if(!hProc)
+		goto exit;
+
+	if(!OpenProcessToken(hProc, TOKEN_READ, &hProcToken))
+		goto exit;
+
+	void *tokenUser[1024] = { 0 };
+	char szUser[64] = { 0 }, szDomain[256] = { 0 };
+	DWORD dwUserLen = 64, dwDomLen = 256, dwTokeLen, dwSidType = 0;
+
+	if(GetTokenInformation(hProcToken, TokenUser, tokenUser, 1024, &dwTokeLen))
 	{
-		void *tokenUser[1024] = { 0 };
-		char szUser[64] = { 0 }, szDomain[256] = { 0 };
-		DWORD dwUserLen, dwDomLen, dwTokeLen, dwSidType = 0;
+		LookupAccountSidA(NULL, ((TOKEN_USER *)tokenUser)->User.Sid, szUser, &dwUserLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
+		strcpy(szUserOut, szUser);
+		goto exit2;
+	}
 
-		if(GetTokenInformation(hCurrProc, TokenUser, tokenUser, 1024, &dwTokeLen))
-		{
-			LookupAccountSidA(NULL, ((TOKEN_USER *)tokenUser)->User.Sid, szUser, &dwUserLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
+exit:
+	strcpy(szUserOut, "Unknown");
 
-			printf("- %-16s %s\\\\%s\n", "Token User:", szDomain, szUser);
+exit2:
+	if(hProc)
+		CloseHandle(hProc);
 
-			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); i++)
-				printf("-");
-			printf("\n");
-
-		} else
-			printf("[!] GetTokenInformation (%d) :: Error querying token user.\n", GetLastError());
-
-		CloseHandle(hCurrProc);
-	} else
-		printf("[!] OpenProcessToken (%d) :: Error opening process token for reading username.\n", GetLastError());*/
+	if(hProcToken)
+		CloseHandle(hProcToken);
 }
 
 

@@ -10,8 +10,7 @@
 
 
 #include <Windows.h>
-#include <stdio.h>
-#include <stdlib.h>
+ #include <stdio.h>
 
 #include "sysinfo.h"
 #include "token.h"
@@ -236,9 +235,9 @@ void DisplayProcesses(void)
 
 					char szProcUser[64] = { 0 };
 
-					//UserFromPID((DWORD)pSysProcInf->UniqueProcessId, szProcUser);
+					UserFromPID((DWORD)pSysProcInf->UniqueProcessId, szProcUser);
 
-					printf("-- T: %X -- %ws\n", (DWORD)pSysProcInf->UniqueProcessId, pSysProcInf->ImageName.Buffer);
+					printf("- %-8d - %-25s - %-45ws\n", (DWORD)pSysProcInf->UniqueProcessId, szProcUser, (pSysProcInf->ImageName.Length ? pSysProcInf->ImageName.Buffer : L"N/A"));
 					
 					pSysProcInf = (SYSTEM_PROCESS_INFORMATION *)((DWORD)pSysProcInf + (DWORD)pSysProcInf->NextEntryOffset);
 				}
