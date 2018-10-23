@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 #include "sysinfo.h"
+#include "token.h"
 
 
 int main(int argc, char **argv)
@@ -22,13 +23,14 @@ int main(int argc, char **argv)
 			"+        @GitHub        +\n"
 			"+-----------------------+\n\n");
 
-	printf("[+] Outputting system information:\n");
+	printf("[+] Listing system information:\n");
 	DisplayWinVerInfo();
 	DisplayCoreInfo();
+
+	printf("\n[+] Listing current process privileges:\n");
+	LoopTokens();
 
 	getch();
 
 	return 0;
 }
-
-

@@ -12,9 +12,6 @@
 
 
 #include <Windows.h>
-#include <LM.h>
-#include <assert.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,7 +23,7 @@ typedef LONG (WINAPI * RtlGetVer)(OSVERSIONINFOEXW *);
 
 
 // Detect HT and use GetSystemInfo to display phy/log cores.
-void DisplayCoreInfo()
+void DisplayCoreInfo( void )
 {
 	int nHyper = 0, nArch = 0, corePhys, coreLog;
 	char szCpuInfo[64] = { 0 };
@@ -85,8 +82,14 @@ void DisplayCoreInfo()
 	if(nHyper)
 		corePhys /= 2;
 
-	printf("\tCPU Info:\t\tx%d - %dC(%dT) - %s\n", nArch, corePhys, coreLog, szCpuInfo);
+	char finalDisp[256] = { 0 };
 
+	if(szCpuInfo[0] != '\0')
+		snprintf(finalDisp, sizeof(finalDisp), "x%d - %dC(%dT) - %s\n", nArch, corePhys, coreLog, szCpuInfo);
+	else
+		snprintf(finalDisp, sizeof(finalDisp), "x%d - %dC(%dT)\n", nArch, corePhys, coreLog);
+
+	printf("- %-20s %s", "CPU Info:", finalDisp);
 }
 
 
@@ -101,7 +104,7 @@ void DisplayWinVerInfo( void )
 	hNtDLL = LoadLibraryA("ntdll.dll");
 	if(!hNtDLL)
 	{
-		printf("[!] LoadLibrary :: Error getting handle to ntdll.\n");
+		printf("[!] LoadLibrary (%d) :: Error getting handle to ntdll.\n", GetLastError());
 		return;
 	} else {
 		RtlGetVersion = (RtlGetVer)GetProcAddress(hNtDLL, "RtlGetVersion");
@@ -114,11 +117,14 @@ void DisplayWinVerInfo( void )
 			{
 				char szServPack[128]	= { 0 };
 				char szProdName[128]	= { 0 };
+				char szProdVer[24]		= { 0 };
 				char szNtType[24]		= { 0 };
 				DWORD dwBuffSize		= 128;
+				DWORD dwProdSize		= 24;
 
 				ZeroMemory(szServPack, 128);
 				ZeroMemory(szProdName, 128);
+				ZeroMemory(szProdVer,	24);
 				ZeroMemory(szNtType,	24);
 
 				switch(osVer.wProductType)
@@ -151,15 +157,22 @@ void DisplayWinVerInfo( void )
 					while(*src)
 						*dst++ = (char)*src++;
 				}
-
+				
 				RegGetValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ProductName", RRF_RT_ANY, NULL, (void *)&szProdName, &dwBuffSize);
+				RegGetValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "ReleaseId", RRF_RT_ANY, NULL, (void *)&szProdVer, &dwProdSize);
 
-				printf("\tSystem Version:\t\t%s - %d.%d.%d (%s)\n", szProdName, osVer.dwMajorVersion, osVer.dwMinorVersion, osVer.dwBuildNumber, szNtType);
-				printf("\tService Pack:\t\t%d.%d (%s)\n", osVer.wServicePackMajor, osVer.wServicePackMinor, szServPack);
+				char finalDisp[256] = { 0 };
+				snprintf(finalDisp, sizeof(finalDisp), "%s %s - %d.%d.%d (%s)\n", szProdName, szProdVer, osVer.dwMajorVersion, osVer.dwMinorVersion, osVer.dwBuildNumber, szNtType);
+
+				printf("- %-20s %s", "System Version:", finalDisp);
+
+				ZeroMemory(finalDisp, sizeof(finalDisp));
+				snprintf(finalDisp, sizeof(finalDisp), "%d.%d (%s)\n", osVer.wServicePackMajor, osVer.wServicePackMinor, szServPack);
+				printf("- %-20s %s", "Service Pack:", finalDisp);
 			}
 
 		} else
-			printf("[!] GetProcAddress :: RtlGetVersion API address.\n");
+			printf("[!] GetProcAddress (%d) :: RtlGetVersion API address.\n", GetLastError());
 
 		FreeLibrary(hNtDLL);
 	}
