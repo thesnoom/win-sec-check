@@ -4,6 +4,8 @@
  * WinSecCheck.
  *
  * - thesnoom 2018
+ * 
+ * Credit: MSDN/Google/StackOverflow/MWR Incognito
  */
 
 
