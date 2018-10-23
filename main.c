@@ -23,14 +23,19 @@ int main(int argc, char **argv)
 			"+-----------------------+\n"
 			"+      - thesnoom       +\n"
 			"+        @GitHub        +\n"
-			"+-----------------------+\n\n");
+			"+-----------------------+\n\n" );
 
 	printf("[+] Listing system information:\n");
 	DisplayWinVerInfo();
 	DisplayCoreInfo();
 
+	printf("\n[+] Listing current user information:\n");
+	UserFromToken();
+	ListTokenUserGroups();
+
 	printf("\n[+] Listing current process privileges:\n");
 	LoopTokens();
+
 
 	getch();
 

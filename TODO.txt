@@ -11,15 +11,13 @@ INFORMATIONAL:
 		- NetUserGetLocalGroups
 		- NetLocalGroupEnum && NetLocalGroupGetMembers
 	
-	
 	NetGetAnyDCName / NetGetDCName / DsGetDcName
 	- Is domain connected & List DCs? - NetServerEnum / DsEnumerateDomainTrustsA
 		- Get domain groups && users
 			- http://ivbel.blogspot.com/2012/01/how-to-list-all-users-groups-of-domain.html		
 			- NetUseEnum - Servers connected to local
 
-			
-SECURITY:	
+SECURITY:
 	- Insecure services
 		- Unquoted Paths
 			- Check permissions on all iterations if found
