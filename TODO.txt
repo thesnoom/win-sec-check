@@ -1,9 +1,5 @@
 INFORMATIONAL:
-	- Get windows version information (Server? Workstation?)
-	- Hostname
-	- x86/x64? | processors | RAM
-	- Get patch information
-	- current privileges
+	- Get patch information (complete fuck on?)
 	- attempt to get SeDebugPrivilege
 
 	- Get users & Groups

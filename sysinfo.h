@@ -49,5 +49,6 @@ typedef struct _SYSTEM_PROCESS_INFORMATION {
 void DisplayCoreInfo( void );
 void DisplayWinVerInfo( void );
 void DisplayProcesses( void );
+void DisplayPATH( void );
 
 #endif

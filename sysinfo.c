@@ -7,6 +7,7 @@
  */
 
 #pragma warning(disable : 4731)
+#pragma warning(disable : 4996)
 
 
 #include <Windows.h>
@@ -251,4 +252,34 @@ void DisplayProcesses(void)
 		FreeLibrary(hNtDLL);
 
 	}
+}
+
+
+// Format and display contents of PATH env variable.
+void DisplayPATH( void )
+{
+	char szBuff[32767] = { 0 };
+	DWORD dwBuffLen = 32767;
+
+	if(GetEnvironmentVariableA("PATH", szBuff, dwBuffLen))
+	{
+		printf("- %-20s\n- ", "PATH:");
+
+		szBuff[strlen(szBuff) - 1] = '\0';
+		char *ch = szBuff;
+
+		while(*ch)
+		{
+			if(*ch == ';')
+				printf("\n- ");
+			else
+				printf("%c", *ch);
+
+			*ch++;
+		}
+
+		printf("\n");
+
+	} else 
+		printf("[!] GetEnvironmentVariable (%d) :: Error pulling environment variable.\n", GetLastError());
 }

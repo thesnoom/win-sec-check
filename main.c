@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 	printf("\n[+] Listing current user information:\n");
 	CurrentUserFromToken();
 	ListTokenUserGroups();
+	DisplayPATH();
 
 	printf("\n[+] Listing current process privileges:\n");
 	LoopTokens();

@@ -29,9 +29,7 @@ void CurrentUserFromToken( void )
 
 			printf("- %-16s %s\\\\%s\n", "Token User:", szDomain, szUser);
 
-			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); i++) 
-				printf("-");
-			printf("\n");
+			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); printf("-"), i++); puts("");
 
 		} else
 			printf("[!] GetTokenInformation (%d) :: Error querying token user.\n", GetLastError());
@@ -98,6 +96,9 @@ void ListTokenUserGroups( void )
 					printf("- %-16s %s\\\\%s\n", "Token Group:", szDomain, szGroup);
 				}
 			}
+
+			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szGroup)); printf("-"), i++); puts("");
+
 		} else
 			printf("[!] GetTokenInformation (%d) :: Error querying token user.\n", GetLastError());
 
