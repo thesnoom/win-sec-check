@@ -14,6 +14,7 @@
 
 #include "sysinfo.h"
 #include "token.h"
+#include "local.h"
 
 
 int main(int argc, char **argv)
@@ -39,6 +40,12 @@ int main(int argc, char **argv)
 
 	printf("\n[+] Listing running processes:\n");
 	DisplayProcesses();
+
+	printf("\n[+] Listing local user accounts:\n");
+	LocalInformation(_LOCAL_USERS);
+
+	printf("\n[+] Listing local groups:\n");
+	LocalInformation(_LOCAL_GROUPS);
 
 	getch();
 

@@ -1,5 +1,5 @@
 /*
- * log.h
+ * token.h
  *
  * WinSecCheck.
  *

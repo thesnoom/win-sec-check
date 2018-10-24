@@ -1,5 +1,5 @@
 /*
- * winver.c
+ * sysinfo.c
  *
  * WinSecCheck.
  *
