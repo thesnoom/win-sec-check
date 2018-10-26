@@ -187,7 +187,7 @@ void DisplayWinVerInfo( void )
 
 
 // Utilise NtQuerySystemInformation to list process information
-void DisplayProcesses(void)
+void DisplayProcesses( void )
 {
 	HMODULE hNtDLL = NULL;
 	NtQuerySystemInfo NtQuerySystemInformation = NULL;
@@ -236,7 +236,7 @@ void DisplayProcesses(void)
 
 					char szProcUser[64] = { 0 };
 
-					UserFromPID((DWORD)pSysProcInf->UniqueProcessId, szProcUser);
+					UserFromPID((DWORD)pSysProcInf->UniqueProcessId, szProcUser, NULL);
 
 					printf("- %-8d - %-25s - %-45ws\n", (DWORD)pSysProcInf->UniqueProcessId, szProcUser, (pSysProcInf->ImageName.Length ? pSysProcInf->ImageName.Buffer : L"N/A"));
 					

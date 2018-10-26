@@ -10,9 +10,11 @@
 #ifndef __WSC_TOKE_H
 #define __WSC_TOKE_H
 
-void CurrentUserFromToken( void );
-void UserFromPID( DWORD dwProcID, char *szUserOut );
-void ListTokenUserGroups( void );
+BOOL UserFromProc( HANDLE hProc, char *szUserOut, char *szDomOut );
+void UserFromPID(DWORD dwProcID, char *szUserOut, char *szDomOut );
+
+BOOL ListGroupsFromProc( HANDLE hProc );
+
 void LoopTokens( void );
 
 #endif

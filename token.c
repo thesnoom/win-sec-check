@@ -12,99 +12,103 @@
 #include <Windows.h>
 #include <stdio.h>
 
-
-// Grab username from token. Cred: Incognito
-void CurrentUserFromToken( void )
+// Retrieving a user from a handle on a process.
+BOOL UserFromProc( HANDLE hProc, char *szUserOut, char *szDomOut )
 {
-	HANDLE hCurrProc;
-	if(OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hCurrProc))
+	BOOL bRet = FALSE;
+
+	if(!hProc)
+		return bRet;
+	
+	HANDLE hProcToken = NULL;
+	if(!OpenProcessToken(hProc, TOKEN_READ, &hProcToken))
+		return bRet;
+
+	void *tokenUser[1024] = { 0 };
+	char szUser[64] = { 0 }, szDom[256] = { 0 };
+	DWORD dwUserLen = 64, dwDomLen = 256, dwTokeLen, dwSidType = 0;
+
+	if(!GetTokenInformation(hProcToken, TokenUser, tokenUser, 1024, &dwTokeLen))
 	{
-		void *tokenUser[1024] = { 0 };
-		char szUser[64] = { 0 }, szDomain[256] = { 0 };
-		DWORD dwUserLen = 64, dwDomLen = 256, dwTokeLen, dwSidType = 0;
+		CloseHandle(hProcToken);
+		return bRet;
+	}
 
-		if(GetTokenInformation(hCurrProc, TokenUser, tokenUser, 1024, &dwTokeLen))
-		{
-			LookupAccountSidA(NULL, ((TOKEN_USER *)tokenUser)->User.Sid, szUser, &dwUserLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
+	if(!LookupAccountSidA(NULL, ((TOKEN_USER *)tokenUser)->User.Sid, szUser, &dwUserLen, szDom, &dwDomLen, (PSID_NAME_USE)&dwSidType))
+	{
+		CloseHandle(hProcToken);
+		return bRet;
+	}
 
-			printf("- %-16s %s\\\\%s\n", "Token User:", szDomain, szUser);
+	bRet = TRUE;
+	CloseHandle(hProcToken);
 
-			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); printf("-"), i++); puts("");
+	if(szUserOut)
+		strcpy(szUserOut, szUser);
 
-		} else
-			printf("[!] GetTokenInformation (%d) :: Error querying token user.\n", GetLastError());
+	if(szDomOut)
+		strcpy(szDomOut, szDom);
 
-		CloseHandle(hCurrProc);
-	} else 
-		printf("[!] OpenProcessToken (%d) :: Error opening process token for reading username.\n", GetLastError());
+	return bRet;
 }
 
 
 // To retrieve a token and thus a user from a process ID.
-void UserFromPID( DWORD dwProcID, char *szUserOut )
+void UserFromPID( DWORD dwProcID, char *szUserOut, char *szDomOut )
 {
-	HANDLE hProcToken = NULL, hProc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwProcID);
+	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwProcID);
 	if(!hProc)
-		goto exit;
-
-	if(!OpenProcessToken(hProc, TOKEN_READ, &hProcToken))
-		goto exit;
-
-	void *tokenUser[1024] = { 0 };
-	char szUser[64] = { 0 }, szDomain[256] = { 0 };
-	DWORD dwUserLen = 64, dwDomLen = 256, dwTokeLen, dwSidType = 0;
-
-	if(GetTokenInformation(hProcToken, TokenUser, tokenUser, 1024, &dwTokeLen))
 	{
-		LookupAccountSidA(NULL, ((TOKEN_USER *)tokenUser)->User.Sid, szUser, &dwUserLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
-		strcpy(szUserOut, szUser);
-		goto exit2;
+		strcpy(szUserOut, "Unknown");
+		return;
 	}
 
-exit:
-	strcpy(szUserOut, "Unknown");
-
-exit2:
-	if(hProc)
-		CloseHandle(hProc);
-
-	if(hProcToken)
-		CloseHandle(hProcToken);
+	UserFromProc(hProc, szUserOut, szDomOut);
 }
 
 
-// Iterate through all groups attached to the user token. Cred: Incognito
-void ListTokenUserGroups( void )
+// To iterate groups retrived from a token from a process handle.
+BOOL ListGroupsFromProc( HANDLE hProc )
 {
-	HANDLE hCurrProc;
-	if(OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hCurrProc))
+	BOOL bRet = FALSE;
+
+	if(!hProc)
+		return bRet;
+
+	HANDLE hProcToken = NULL;
+	if(!OpenProcessToken(hProc, TOKEN_READ, &hProcToken))
+		return bRet;
+
+	void *tokenGroups[1024] = { 0 };
+	char szGroup[64] = { 0 }, szDomain[256] = { 0 }, finalDisplay[384] = { 0 };
+	DWORD dwGroupLen, dwDomLen, dwTokeLen, dwSidType = 0, i;
+
+	if(!GetTokenInformation(hProcToken, TokenGroups, tokenGroups, 1024, &dwTokeLen))
 	{
-		void *tokenGroups[1024] = { 0 };
-		char szGroup[64] = { 0 }, szDomain[256] = { 0 }, finalDisplay[384] = { 0 };
-		DWORD dwGroupLen, dwDomLen, dwTokeLen, dwSidType = 0, i;
+		CloseHandle(hProcToken);
+		return bRet;
+	}
 
-		if(GetTokenInformation(hCurrProc, TokenGroups, tokenGroups, 1024, &dwTokeLen))
+	bRet = TRUE;
+
+	for(i = 0; i < ((TOKEN_GROUPS *)tokenGroups)->GroupCount; i++)
+	{
+		if((((TOKEN_GROUPS *)tokenGroups)->Groups[i].Attributes & SE_GROUP_ENABLED) != 0)
 		{
-			for(i = 0; i < ((TOKEN_GROUPS *)tokenGroups)->GroupCount; i++)
-			{
-				if((((TOKEN_GROUPS *)tokenGroups)->Groups[i].Attributes & SE_GROUP_ENABLED) != 0)
-				{
-					dwGroupLen = 64, dwDomLen = 256;
+			dwGroupLen = 64, dwDomLen = 256;
 
-					LookupAccountSidA(NULL, ((TOKEN_GROUPS *)tokenGroups)->Groups[i].Sid, szGroup, &dwGroupLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
+			LookupAccountSidA(NULL, ((TOKEN_GROUPS *)tokenGroups)->Groups[i].Sid, szGroup, &dwGroupLen, szDomain, &dwDomLen, (PSID_NAME_USE)&dwSidType);
 
-					printf("- %-16s %s\\\\%s\n", "Token Group:", szDomain, szGroup);
-				}
-			}
+			printf("- %-16s %s\\\\%s\n", "Token Group:", szDomain, szGroup);
+		}
+	}
 
-			for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szGroup)); printf("-"), i++); puts("");
+	CloseHandle(hProcToken);
 
-		} else
-			printf("[!] GetTokenInformation (%d) :: Error querying token user.\n", GetLastError());
+	for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szGroup)); printf("-"), i++); puts("");
 
-		CloseHandle(hCurrProc);
-	} else
-		printf("[!] OpenProcessToken (%d) :: Error opening process token for reading username.\n", GetLastError());
+	return bRet;
+
 }
 
 
