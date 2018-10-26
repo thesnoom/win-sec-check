@@ -101,6 +101,7 @@ int main(int argc, char **argv)
 	LocalInformation(_LOCAL_GROUPS);
 	// ------------------------------------------------
 	// ------------------------------------------------
+	
 	getch();
 
 	return 0;
