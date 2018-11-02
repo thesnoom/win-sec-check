@@ -15,6 +15,7 @@
 #include "sysinfo.h"
 #include "token.h"
 #include "local.h"
+#include "adapters.h"
 
 
 int main(int argc, char **argv)
