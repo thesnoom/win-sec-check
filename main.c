@@ -12,10 +12,14 @@
 #include <Windows.h>
 #include <stdio.h>
 
+#include "main.h"
 #include "sysinfo.h"
 #include "token.h"
 #include "local.h"
 #include "adapters.h"
+
+
+unsigned long dwDomainFlags = 0x00;
 
 
 int main(int argc, char **argv)
@@ -60,7 +64,7 @@ int main(int argc, char **argv)
 		printf("- Domain joined PC: %s\n- PC Domain Name: %s\n", szDomTest, szDomFQ);
 		for(size_t i = 0; i < (18 + strlen(szDomFQ)); printf("-"), i++); puts("");
 
-		// SET DOMAIN FLAG
+		dwDomainFlags |= WSC_DOMAINJOINED;
 	}
 	
 	char *szUser = (char *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 64);

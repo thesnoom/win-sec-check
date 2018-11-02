@@ -13,6 +13,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
+#include "main.h"
 #include "sysinfo.h"
 #include "token.h"
 
@@ -148,6 +149,8 @@ void DisplayWinVerInfo( void )
 					case VER_NT_DOMAIN_CONTROLLER:
 					{
 						memcpy(szNtType, "Domain Controller", strlen("Domain Controller"));
+						dwDomainFlags |= WSC_DOMAINDC;
+
 						break;
 					}
 				}
