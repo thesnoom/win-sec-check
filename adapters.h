@@ -10,6 +10,6 @@
 #ifndef __WSC_ADAP_H
 #define __WSC_ADAP_H
 
-
+void DisplayLocalAdapters( void );
 
 #endif

@@ -11,7 +11,7 @@
 
 
 #include <Windows.h>
- #include <stdio.h>
+#include <stdio.h>
 
 #include "sysinfo.h"
 #include "token.h"
@@ -92,6 +92,7 @@ void DisplayCoreInfo( void )
 		snprintf(finalDisp, sizeof(finalDisp), "x%d - %dC(%dT)\n", nArch, corePhys, coreLog);
 
 	printf("- %-20s %s", "CPU Info:", finalDisp);
+	for(size_t i = 0; i < (22 + strlen(finalDisp)); printf("-"), i++); puts("");
 }
 
 
