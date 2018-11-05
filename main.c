@@ -10,6 +10,7 @@
 
 
 #include <Windows.h>
+#include <LM.h>
 #include <stdio.h>
 
 #include "main.h"
@@ -17,9 +18,10 @@
 #include "token.h"
 #include "local.h"
 #include "adapters.h"
+#include "domain.h"
 
 
-unsigned long dwDomainFlags = 0x00;
+unsigned long dwDomainFlags;
 
 
 int main(int argc, char **argv)
@@ -40,6 +42,27 @@ int main(int argc, char **argv)
 	DisplayWinVerInfo();
 	DisplayCoreInfo();
 	DisplayLocalAdapters();
+
+	char szDomTest[256] = { 0 }, szDomFQ[256] = { 0 };
+	DWORD dwDomLen = 256;
+	GetComputerNameEx(ComputerNamePhysicalDnsDomain, szDomTest, &dwDomLen);
+
+	dwDomLen = 256;
+	GetComputerNameEx(ComputerNameDnsFullyQualified, szDomFQ, &dwDomLen);
+
+	if(dwDomainFlags & WSC_DOMAINDC)
+	{
+		printf("- *** THIS IS A DOMAIN CONTROLLER ***\n");
+		printf("-------------------------------------\n");
+	}
+
+	if(strlen(szDomTest))
+	{
+		printf("- %-20s %s\n- %-20s %s\n", "Domain joined PC: ", szDomTest, "PC Domain Name: ", szDomFQ);
+		for(size_t i = 0; i < (23 + strlen(szDomFQ)); printf("-"), i++); puts("");
+
+		dwDomainFlags |= WSC_DOMAINJOINED;
+	}
 	// ------------------------------------------------
 	// ------------------------------------------------
 
@@ -51,21 +74,6 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	printf("\n[+] Listing current user information:\n");
 	printf("-------------------------------------\n");
-
-	char szDomTest[256] = { 0 }, szDomFQ[256] = { 0 };
-	DWORD dwDomLen = 256;
-	GetComputerNameEx(ComputerNamePhysicalDnsDomain, szDomTest, &dwDomLen);
-
-	dwDomLen = 256;
-	GetComputerNameEx(ComputerNameDnsFullyQualified, szDomFQ, &dwDomLen);
-
-	if(strlen(szDomTest))
-	{
-		printf("- Domain joined PC: %s\n- PC Domain Name: %s\n", szDomTest, szDomFQ);
-		for(size_t i = 0; i < (18 + strlen(szDomFQ)); printf("-"), i++); puts("");
-
-		dwDomainFlags |= WSC_DOMAINJOINED;
-	}
 	
 	char *szUser = (char *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 64);
 	if(!szUser)
@@ -128,20 +136,48 @@ int main(int argc, char **argv)
 
 
 	// ------------------------------------------------
-	// Local Users & Groups
+	// Local Users & Groups ( If DC it lists domain users... )
 	// ------------------------------------------------
-	printf("\n[+] Listing local user accounts:\n");
-	printf("--------------------------------\n");
+	if(dwDomainFlags & WSC_DOMAINDC)
+	{
+		printf("\n[+] Listing domain user accounts:\n");
+		printf("---------------------------------\n");
 
-	LocalInformation(_LOCAL_USERS);
+		LocalInformation(_LOCAL_USERS);
 
-	printf("\n[+] Listing local groups:\n");
-	printf("-------------------------\n");
+		printf("\n[+] Listing domain groups:\n");
+		printf("--------------------------\n");
 
-	LocalInformation(_LOCAL_GROUPS);
+		LocalInformation(_LOCAL_GROUPS);
+	} else {
+		printf("\n[+] Listing local user accounts:\n");
+		printf("--------------------------------\n");
+
+		LocalInformation(_LOCAL_USERS);
+
+		printf("\n[+] Listing local groups:\n");
+		printf("-------------------------\n");
+
+		LocalInformation(_LOCAL_GROUPS);
+	}
 	// ------------------------------------------------
 	// ------------------------------------------------
 
+
+
+
+	// ------------------------------------------------
+	// Domain Controllers, Users & Groups.
+	// ------------------------------------------------
+	if((dwDomainFlags & WSC_DOMAINJOINED) && !(dwDomainFlags & WSC_DOMAINDC))
+	{
+		printf("\n[+] Listing domain information:\n");
+		printf("-------------------------------\n");
+
+		ListDomainInfo();
+	}
+	// ------------------------------------------------
+	// ------------------------------------------------
 
 	getch();
 

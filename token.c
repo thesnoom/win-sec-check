@@ -12,6 +12,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
+
 // Retrieving a user from a handle on a process.
 BOOL UserFromProc( HANDLE hProc, char *szUserOut, char *szDomOut )
 {

@@ -18,6 +18,8 @@
 
 #include "adapters.h"
 
+
+// Loop all local adapters for IPv4, DNS entries and Gateways.
 void DisplayLocalAdapters( void )
 {
 	DWORD dwSize = 15000, dwRet = 0, dwFlags = (GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_INCLUDE_GATEWAYS);

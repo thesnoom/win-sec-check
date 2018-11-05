@@ -10,9 +10,9 @@
 #ifndef __WSC_MAIN_H
 #define __WSC_MAIN_H
 
-#define WSC_DOMAINJOINED	0x00000001
-#define WSC_DOMAINDC		0x00000002
+#define WSC_DOMAINJOINED	0x10
+#define WSC_DOMAINDC		0x20
 
-extern unsigned long  dwDomainFlags;
+extern unsigned long dwDomainFlags;
 
 #endif

@@ -25,6 +25,9 @@ typedef LONG (WINAPI *NtQuerySystemInfo)(DWORD SystemInformationClass, VOID *Sys
 #define STATUS_INFO_LENGTH_MISMATCH ((LONG)0xC0000004L)
 
 
+unsigned long dwDomainFlags;
+
+
 // Detect HT and use GetSystemInfo to display phy/log cores.
 void DisplayCoreInfo( void )
 {

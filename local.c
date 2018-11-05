@@ -16,6 +16,7 @@
 #include "local.h"
 
 
+// Query local host for information regarding Users and Groups.
 void LocalInformation(DWORD dwFlag)
 {
 	DWORD dwRet = 0, dwRec = 0, i = 0;
@@ -35,7 +36,7 @@ void LocalInformation(DWORD dwFlag)
 				for(DWORD n = 0; n < dwRec && p; n++, i = p->usri1_next_index, p++)
 				{
 					if(p->usri1_full_name[0] != L'\0')
-						printf("- %-30ws (%-25ws) - %-.40ws...\n", p->usri1_name, p->usri1_full_name, p->usri1_comment);
+						printf("- %-30ws (%ws) - %-.40ws...\n", p->usri1_name, p->usri1_full_name, p->usri1_comment);
 					else 
 						printf("- %-30ws - %-.40ws...\n", p->usri1_name, (p->usri1_comment[0] != L'\0' ? p->usri1_comment : L"N/A"));
 				}
@@ -43,7 +44,7 @@ void LocalInformation(DWORD dwFlag)
 				NetApiBufferFree(pUser);
 
 			} else
-				printf("Err: %u (%d)", dwRet, GetLastError());
+				printf("[-] NetQueryDisplayInformation :: Error retrieving users (%d)", GetLastError());
 
 		} while(dwRet == ERROR_MORE_DATA);
 
@@ -63,7 +64,7 @@ void LocalInformation(DWORD dwFlag)
 					printf("- %-35ws - %-.60ws...\n", p->lgrpi1_name, p->lgrpi1_comment);
 
 			} else
-				printf("Err: %u (%d)", dwRet, GetLastError());
+				printf("[-] NetQueryDisplayInformation :: Error retrieving groups (%d)", GetLastError());
 
 			NetApiBufferFree(pGroup);
 
