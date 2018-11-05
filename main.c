@@ -14,7 +14,6 @@
 
 
 #include <Windows.h>
-#include <LM.h>
 #include <stdio.h>
 
 #include "main.h"
