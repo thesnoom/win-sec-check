@@ -43,7 +43,7 @@ The reason for this is to evade detection and have full compatability. A lot of 
    *Local groups*
 - **Domain information**
 
-   *Loops trusts (untested so far...)*
+   *Loops trusts (untested with more than one DC so far...)*
    
    *Domain DNS*
    
