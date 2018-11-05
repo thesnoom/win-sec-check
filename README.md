@@ -68,7 +68,8 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 - MWR Incognito (Tokens! <3)
 
 # Example output:
-```+-----------------------+
+```
++-----------------------+
 +      WinSecCheck      +
 +-----------------------+
 +      - thesnoom       +
