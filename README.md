@@ -13,39 +13,39 @@ The reason for this is to evade detection and have full compatability. A lot of 
 - Windows 10 (Latest updates) - Host.
 
 ### So far:
-- List System Information:
+- **List System Information**:
 
    *System Version, Service Pack, CPU Info.*
-- Adapter Information:
+- **Adapter Information**:
 
    *Each internet adapter, DNS entries + Gateway information.*
-- Is it domain joined?
+- **Is it domain joined?**
 
    *The domain name + PCs domain name.*
-- Current user information:
+- **Current user information**:
 
    *User token Domain + User, e.g. DOMAIN\\LogonName*
    
    *User token groups, e.g. DOMAIN\\Domain Users*
-- Environment Path
-- Process Privileges:
+- **Environment Path**
+- **Process Privileges**:
 
    *SeShutdownPrivilege*
    
    *SeDebugPrivilege etc...*
-- Running Processes:
+- **Running Processes**:
 
    *PID, User, Image name*
-- Local Information
+- **Local Information**
 
    *Local user accounts*
    
    *Local groups*
-- Domain information
+- **Domain information**
 
    *Loops trusts (untested so far...)*
    
-   *Domain DNS *
+   *Domain DNS*
    
    *Domain DC DNS*
    
