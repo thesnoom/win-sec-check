@@ -8,6 +8,10 @@
  * Credit: MSDN/Google/StackOverflow/MWR Incognito
  */
 
+#pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "netapi32.lib")
+
 
 #include <Windows.h>
 #include <LM.h>

@@ -6,8 +6,6 @@
  * - thesnoom 2018
  */
 
-#pragma comment(lib, "netapi32.lib")
-
 
 #include <Windows.h>
 #include <DsGetDC.h>
@@ -19,7 +17,6 @@
 
 
 unsigned long dwDomainFlags;
-
 
 
 // Query all domain trusts, return information if needed (to loop users and groups)

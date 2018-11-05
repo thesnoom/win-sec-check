@@ -6,8 +6,6 @@
  * - thesnoom 2018
  */
 
-#pragma comment(lib, "netapi32.lib")
-
 
 #include <Windows.h>
 #include <LM.h>

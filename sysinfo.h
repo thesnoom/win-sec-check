@@ -10,8 +10,6 @@
 #ifndef __WSC_SINFO_H
 #define __WSC_SINFO_H
 
-#include <Windows.h>
-
 
 typedef struct _UNICODE_STRING {
 	USHORT Length;
