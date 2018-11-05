@@ -61,6 +61,11 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 
 - Snoom
 
+# Credit
+- MSDN
+- Stackoverflow
+- Google
+- MWR Incognito (Tokens! <3)
 
 # Example output:
 ```+-----------------------+
