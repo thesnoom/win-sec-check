@@ -25,11 +25,13 @@ The reason for this is to evade detection and have full compatability. A lot of 
 - Current user information:
 
    *User token Domain + User, e.g. DOMAIN\\LogonName*
+   
    *User token groups, e.g. DOMAIN\\Domain Users*
 - Environment Path
 - Process Privileges:
 
    *SeShutdownPrivilege*
+   
    *SeDebugPrivilege etc...*
 - Running Processes:
 
@@ -37,14 +39,20 @@ The reason for this is to evade detection and have full compatability. A lot of 
 - Local Information
 
    *Local user accounts*
+   
    *Local groups*
 - Domain information
 
    *Loops trusts (untested so far...)*
+   
    *Domain DNS *
+   
    *Domain DC DNS*
+   
    *Domain DC IP*
+   
    *Domain users*
+   
    *Domain groups*
 
 There will be more added as this project develops, such as individual insecure components, registry entries, unquoted services etc. The TODO lists some of the work that is yet to be complete.
