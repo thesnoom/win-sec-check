@@ -14,24 +14,32 @@ The reason for this is to evade detection and have full compatability. A lot of 
 
 ### So far:
 - List System Information:
+
    System Version, Service Pack, CPU Info.
 - Adapter Information:
+
    Each internet adapter, DNS entries + Gateway information.
 - Is it domain joined?
+
    The domain name + PCs domain name.
 - Current user information:
+
    User token Domain + User, e.g. DOMAIN\\LogonName
    User token groups, e.g. DOMAIN\\Domain Users
 - Environment Path
 - Process Privileges:
+
    SeShutdownPrivilege
    SeDebugPrivilege etc...
 - Running Processes:
+
    PID, User, Image name
 - Local Information
+
    Local user accounts
    Local groups
 - Domain information
+
    Loops trusts (untested so far...)
    Domain DNS 
    Domain DC DNS
