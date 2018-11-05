@@ -50,3 +50,4 @@ https://stackoverflow.com/questions/2877295/get-os-in-c-win32-for-all-versions-o
 https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/wdm/ns-wdm-_osversioninfoexw
 http://www.rohitab.com/discuss/topic/24252-ntfs-directcopy-method-from-napalm/
 https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/
+https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83
