@@ -22,6 +22,7 @@
 #include "local.h"
 #include "adapters.h"
 #include "domain.h"
+#include "services.h"
 
 
 unsigned long dwDomainFlags;
