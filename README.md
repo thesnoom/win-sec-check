@@ -28,6 +28,8 @@ The reason for this is to evade detection and have full compatibility. A lot of 
    
    *User token groups, e.g. DOMAIN\\Domain Users*
 - **Environment Path**
+
+   *Permissions (DACL) of Path*   
 - **Process Privileges**:
 
    *SeShutdownPrivilege*
@@ -78,7 +80,7 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 
 [+] Listing system information:
 -------------------------------
-- System Version:      Windows 10 Pro 1607 - 10.0.14393 (Desktop)
+- System Version:      Windows 10 Enterprise 1803 - 10.0.17134 (Desktop)
 - Service Pack:        0.0 (N/A)
 - CPU Info:            x64 - 1C(2T) - Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz
 -------------------------------------------------------------------------------
@@ -105,16 +107,89 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 - Token Group:     \\CONSOLE LOGON
 - Token Group:     NT AUTHORITY\\Authenticated Users
 - Token Group:     NT AUTHORITY\\This Organization
-- Token Group:     NT AUTHORITY\\LogonSessionId_0_417991
+- Token Group:     NT AUTHORITY\\LogonSessionId_0_878320
 - Token Group:     \\LOCAL
 - Token Group:     \\Authentication authority asserted identity
 ---------------------------------------------------------------
+
 - PATH:
-- C:\Windows\system32
-- C:\Windows
-- C:\Windows\System32\Wbem
-- C:\Windows\System32\WindowsPowerShell\v1.0\
-- C:\Users\w.ten\AppData\Local\Microsoft\WindowsApp
+
+- C:\WINDOWS\system32
+---------------------
+NT SERVICE\TrustedInstaller - F
+NT SERVICE\TrustedInstaller - F
+NT AUTHORITY\SYSTEM - F
+NT AUTHORITY\SYSTEM - F
+BUILTIN\Administrators - F
+BUILTIN\Administrators - F
+BUILTIN\Users - F
+BUILTIN\Users - R X
+\CREATOR OWNER - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - R X
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - R X
+
+- C:\WINDOWS
+------------
+NT SERVICE\TrustedInstaller - F
+NT SERVICE\TrustedInstaller - F
+NT AUTHORITY\SYSTEM - F
+NT AUTHORITY\SYSTEM - F
+BUILTIN\Administrators - F
+BUILTIN\Administrators - F
+BUILTIN\Users - F
+BUILTIN\Users - R X
+\CREATOR OWNER - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - R X
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - R X
+
+- C:\WINDOWS\System32\Wbem
+--------------------------
+NT SERVICE\TrustedInstaller - F
+NT SERVICE\TrustedInstaller - F
+NT AUTHORITY\SYSTEM - F
+NT AUTHORITY\SYSTEM - F
+BUILTIN\Administrators - F
+BUILTIN\Administrators - F
+BUILTIN\Users - F
+BUILTIN\Users - R X
+\CREATOR OWNER - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - R X
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - R X
+
+- C:\WINDOWS\System32\WindowsPowerShell\v1.0\
+---------------------------------------------
+NT SERVICE\TrustedInstaller - F
+NT SERVICE\TrustedInstaller - F
+NT AUTHORITY\SYSTEM - F
+NT AUTHORITY\SYSTEM - F
+BUILTIN\Administrators - F
+BUILTIN\Administrators - F
+BUILTIN\Users - F
+BUILTIN\Users - R X
+\CREATOR OWNER - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES - R X
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - F
+APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APP PACKAGES - R X
+
+- C:\WINDOWS\System32\OpenSSH\
+------------------------------
+TESTDOMAIN\w.ten - F
+NT AUTHORITY\SYSTEM - F
+NT AUTHORITY\LogonSessionId_0_878320 - F
+
+- C:\Users\w.ten\AppData\Local\Microsoft\WindowsApps
+----------------------------------------------------
+NT AUTHORITY\SYSTEM - F
+BUILTIN\Administrators - F
+TESTDOMAIN\w.ten - F
+
 
 [+] Listing current process privileges:
 ---------------------------------------
@@ -128,59 +203,125 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 ------------------------------
 - 0        - Unknown                   - N/A
 - 4        - Unknown                   - System
-- 284      - Unknown                   - smss.exe
-- 396      - Unknown                   - csrss.exe
-- 468      - Unknown                   - wininit.exe
-- 480      - Unknown                   - csrss.exe
-- 540      - Unknown                   - services.exe
-- 548      - Unknown                   - lsass.exe
-- 588      - Unknown                   - winlogon.exe
-- 680      - Unknown                   - svchost.exe
-- 748      - Unknown                   - svchost.exe
-- 860      - Unknown                   - svchost.exe
-- 892      - Unknown                   - dwm.exe
-- 932      - Unknown                   - svchost.exe
-- 964      - Unknown                   - svchost.exe
-- 1016     - Unknown                   - svchost.exe
-- 484      - Unknown                   - svchost.exe
-- 536      - Unknown                   - svchost.exe
-- 1140     - Unknown                   - vmacthlp.exe
-- 1372     - Unknown                   - svchost.exe
-- 1456     - Unknown                   - svchost.exe
-- 1548     - Unknown                   - spoolsv.exe
-- 1696     - Unknown                   - svchost.exe
-- 1828     - Unknown                   - VGAuthService.exe
-- 1836     - Unknown                   - vmtoolsd.exe
-- 1856     - Unknown                   - svchost.exe
-- 1932     - Unknown                   - Memory Compression
-- 2104     - Unknown                   - WmiPrvSE.exe
-- 2256     - Unknown                   - dllhost.exe
-- 2612     - Unknown                   - msdtc.exe
-- 3372     - Unknown                   - svchost.exe
-- 1036     - w.ten                     - sihost.exe
-- 900      - w.ten                     - svchost.exe
-- 3976     - w.ten                     - taskhostw.exe
-- 2592     - w.ten                     - RuntimeBroker.exe
-- 5744     - w.ten                     - MSASCuiL.exe
-- 5780     - w.ten                     - vmtoolsd.exe
-- 4128     - w.ten                     - OneDrive.exe
-- 4372     - w.ten                     - ApplicationFrameHost.exe
-- 2928     - w.ten                     - dllhost.exe
-- 1964     - Unknown                   - svchost.exe
-- 4840     - Unknown                   - sedsvc.exe
-- 360      - w.ten                     - SystemSettings.exe
-- 5932     - Unknown                   - SearchIndexer.exe
-- 1152     - Unknown                   - MsMpEng.exe
-- 5060     - Unknown                   - NisSrv.exe
-- 2960     - w.ten                     - SkypeHost.exe
-- 988      - Unknown                   - MpCmdRun.exe
-- 5460     - w.ten                     - explorer.exe
-- 7084     - w.ten                     - ShellExperienceHost.exe
-- 5288     - w.ten                     - SearchUI.exe
-- 528      - Unknown                   - SearchProtocolHost.exe
-- 3148     - Unknown                   - SearchFilterHost.exe
-- 2728     - w.ten                     - WinSecCheck.exe
-- 3992     - w.ten                     - conhost.exe
+- 88       - Unknown                   - Registry
+- 308      - Unknown                   - smss.exe
+- 424      - Unknown                   - csrss.exe
+- 496      - Unknown                   - wininit.exe
+- 504      - Unknown                   - csrss.exe
+- 592      - Unknown                   - winlogon.exe
+- 600      - Unknown                   - services.exe
+- 640      - Unknown                   - lsass.exe
+- 732      - Unknown                   - fontdrvhost.exe
+- 740      - Unknown                   - fontdrvhost.exe
+- 760      - Unknown                   - svchost.exe
+- 840      - Unknown                   - svchost.exe
+- 888      - Unknown                   - svchost.exe
+- 940      - Unknown                   - svchost.exe
+- 284      - Unknown                   - dwm.exe
+- 488      - Unknown                   - svchost.exe
+- 568      - Unknown                   - svchost.exe
+- 812      - Unknown                   - svchost.exe
+- 856      - Unknown                   - svchost.exe
+- 1052     - Unknown                   - svchost.exe
+- 1092     - Unknown                   - svchost.exe
+- 1140     - Unknown                   - svchost.exe
+- 1224     - Unknown                   - svchost.exe
+- 1232     - Unknown                   - svchost.exe
+- 1300     - Unknown                   - svchost.exe
+- 1348     - Unknown                   - svchost.exe
+- 1436     - Unknown                   - svchost.exe
+- 1468     - Unknown                   - svchost.exe
+- 1552     - Unknown                   - svchost.exe
+- 1564     - Unknown                   - svchost.exe
+- 1584     - Unknown                   - vmacthlp.exe
+- 1692     - Unknown                   - svchost.exe
+- 1716     - Unknown                   - svchost.exe
+- 1724     - Unknown                   - svchost.exe
+- 1852     - Unknown                   - Memory Compression
+- 1888     - Unknown                   - svchost.exe
+- 1940     - Unknown                   - svchost.exe
+- 1948     - Unknown                   - svchost.exe
+- 2024     - Unknown                   - svchost.exe
+- 1792     - Unknown                   - svchost.exe
+- 2084     - Unknown                   - svchost.exe
+- 2112     - Unknown                   - svchost.exe
+- 2128     - Unknown                   - svchost.exe
+- 2148     - Unknown                   - svchost.exe
+- 2160     - Unknown                   - svchost.exe
+- 2284     - Unknown                   - svchost.exe
+- 2292     - Unknown                   - svchost.exe
+- 2428     - Unknown                   - spoolsv.exe
+- 2532     - Unknown                   - svchost.exe
+- 2728     - Unknown                   - svchost.exe
+- 2736     - Unknown                   - svchost.exe
+- 2744     - Unknown                   - svchost.exe
+- 2752     - Unknown                   - svchost.exe
+- 2788     - Unknown                   - svchost.exe
+- 2796     - Unknown                   - VGAuthService.exe
+- 2812     - Unknown                   - svchost.exe
+- 2820     - Unknown                   - vmtoolsd.exe
+- 2828     - Unknown                   - SecurityHealthService.exe
+- 2852     - Unknown                   - MsMpEng.exe
+- 2908     - Unknown                   - svchost.exe
+- 3036     - Unknown                   - svchost.exe
+- 3532     - Unknown                   - svchost.exe
+- 3608     - Unknown                   - dllhost.exe
+- 3696     - Unknown                   - WmiPrvSE.exe
+- 3884     - Unknown                   - msdtc.exe
+- 3224     - Unknown                   - NisSrv.exe
+- 2596     - Unknown                   - svchost.exe
+- 4328     - Unknown                   - svchost.exe
+- 4368     - Unknown                   - svchost.exe
+- 4884     - Unknown                   - svchost.exe
+- 5032     - Unknown                   - SgrmBroker.exe
+- 3876     - Unknown                   - svchost.exe
+- 716      - Unknown                   - SearchIndexer.exe
+- 3716     - Unknown                   - svchost.exe
+- 4192     - Unknown                   - svchost.exe
+- 2472     - Unknown                   - svchost.exe
+- 4032     - Unknown                   - svchost.exe
+- 1780     - w.ten                     - sihost.exe
+- 3496     - w.ten                     - svchost.exe
+- 3328     - w.ten                     - svchost.exe
+- 5052     - Unknown                   - svchost.exe
+- 1772     - Unknown                   - svchost.exe
+- 2408     - Unknown                   - ctfmon.exe
+- 1484     - w.ten                     - explorer.exe
+- 404      - Unknown                   - svchost.exe
+- 3156     - Unknown                   - svchost.exe
+- 1964     - w.ten                     - taskhostw.exe
+- 2192     - Unknown                   - svchost.exe
+- 3728     - Unknown                   - svchost.exe
+- 2108     - w.ten                     - dllhost.exe
+- 852      - w.ten                     - svchost.exe
+- 5272     - w.ten                     - ShellExperienceHost.exe
+- 5424     - w.ten                     - SearchUI.exe
+- 5468     - w.ten                     - RuntimeBroker.exe
+- 5512     - w.ten                     - RuntimeBroker.exe
+- 5572     - w.ten                     - RuntimeBroker.exe
+- 4776     - w.ten                     - dllhost.exe
+- 1608     - w.ten                     - ApplicationFrameHost.exe
+- 344      - w.ten                     - MicrosoftEdge.exe
+- 6108     - w.ten                     - browser_broker.exe
+- 3416     - w.ten                     - RuntimeBroker.exe
+- 532      - w.ten                     - MicrosoftEdgeCP.exe
+- 2768     - w.ten                     - MicrosoftEdgeCP.exe
+- 3572     - w.ten                     - MSASCuiL.exe
+- 3432     - w.ten                     - FileCoAuth.exe
+- 208      - w.ten                     - vmtoolsd.exe
+- 2692     - w.ten                     - SkypeHost.exe
+- 6372     - Unknown                   - svchost.exe
+- 6872     - Unknown                   - audiodg.exe
+- 7160     - w.ten                     - Microsoft.Photos.exe
+- 4544     - w.ten                     - RuntimeBroker.exe
+- 7360     - Unknown                   - svchost.exe
+- 7484     - w.ten                     - RuntimeBroker.exe
+- 7868     - w.ten                     - OneDrive.exe
+- 7272     - w.ten                     - backgroundTaskHost.exe
+- 6216     - w.ten                     - WinStore.App.exe
+- 4508     - w.ten                     - RuntimeBroker.exe
+- 7576     - w.ten                     - WinSecCheck.exe
+- 7616     - w.ten                     - conhost.exe
 
 [+] Listing local user accounts:
 --------------------------------
@@ -189,6 +330,7 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 - DefaultAccount                 - A user account managed by the system....
 - defaultuser0                   - N/A...
 - Guest                          - Built-in account for guest access to the...
+- WDAGUtilityAccount             - A user account managed and used by the s...
 
 [+] Listing local groups:
 -------------------------
@@ -196,6 +338,7 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 - Administrators                      - Administrators have complete and unrestricted access to the ...
 - Backup Operators                    - Backup Operators can override security restrictions for the ...
 - Cryptographic Operators             - Members are authorized to perform cryptographic operations....
+- Device Owners                       - Members of this group can change system-wide settings....
 - Distributed COM Users               - Members are allowed to launch, activate and use Distributed ...
 - Event Log Readers                   - Members of this group can read event logs from local machine...
 - Guests                              - Guests have the same access as members of the Users group by...
