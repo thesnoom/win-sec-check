@@ -60,11 +60,11 @@ void PrintPathDacl( ACL *pDacl )
 
 				LookupAccountSidA(NULL, (SID *)&pAce->SidStart, szAceUser, &dwUserLen, szAceDom, &dwDomLen, &pName);
 
-				printf("%s\\%s - ", szAceDom, szAceUser);
+				printf("%s\\%s -", szAceDom, szAceUser);
 
 				if(pAce->Mask & GENERIC_ALL || pAce->Mask & FILE_ALL_ACCESS) 
 				{
-					printf("F\n");
+					printf(" F\n");
 					continue;
 				}
 
