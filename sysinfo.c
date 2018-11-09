@@ -16,6 +16,7 @@
 #include "main.h"
 #include "sysinfo.h"
 #include "token.h"
+#include "descriptors.h"
 
 
 typedef LONG (WINAPI *RtlGetVer)(OSVERSIONINFOEXW *);
@@ -270,23 +271,37 @@ void DisplayPATH( void )
 
 	if(GetEnvironmentVariableA("PATH", szBuff, dwBuffLen))
 	{
-		printf("- %-20s\n- ", "PATH:");
+		printf("\n- PATH:\n\n");
 
-		szBuff[strlen(szBuff) - 1] = '\0';
-		char *ch = szBuff;
-
-		while(*ch)
+		char *path = strtok(szBuff, ";");
+		while(path != NULL)
 		{
-			if(*ch == ';')
-				printf("\n- ");
-			else
-				printf("%c", *ch);
+			printf("- %s\n", path);
 
-			*ch++;
+			for(size_t i = 0; i < strlen(path) + 2; i++, printf("-")); puts("");
+
+			HANDLE hPathDir = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+			if(hPathDir)
+			{
+				SECURITY_DESCRIPTOR *pDesc;
+				ACL *pDacl = GetObjectDacl(hPathDir, SE_FILE_OBJECT, &pDesc);
+				BOOL bIsPresent = FALSE;
+				
+
+				GetSecurityDescriptorDacl(&pDesc, &bIsPresent, &pDacl, NULL);
+
+				if(bIsPresent && pDacl == NULL)
+					printf("NULL dacl! Everyone - F...");
+				else
+					PrintPathDacl(pDacl);
+
+
+				LocalFree(pDesc);
+				CloseHandle(hPathDir);
+			}
+			
+			puts("");
+			path = strtok(NULL, ";");
 		}
-
-		printf("\n");
-
-	} else 
-		printf("[!] GetEnvironmentVariable (%d) :: Error pulling environment variable.\n", GetLastError());
+	}
 }

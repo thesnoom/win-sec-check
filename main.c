@@ -23,6 +23,7 @@
 #include "adapters.h"
 #include "domain.h"
 #include "services.h"
+#include "descriptors.h"
 
 
 unsigned long dwDomainFlags;
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
 
 
 	// ------------------------------------------------
-	// Current User Information & Domain Checks
+	// Current User Information
 	// ------------------------------------------------
 	printf("\n[+] Listing current user information:\n");
 	printf("-------------------------------------\n");
