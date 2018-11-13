@@ -45,44 +45,15 @@ void ListDomainInfo( void )
 
 			if(!(dwDomainFlags & WSC_DOMAINDC))
 			{
-				printf("- Listing domain accounts:\n");
-				printf("--------------------------\n");
+				printf("- Listing domain groups:\n");
+				printf("------------------------\n");
 
-				PNET_DISPLAY_USER pUser = NULL, pU = NULL;
+				PNET_DISPLAY_GROUP pGroup = NULL, pG = 0;
 				DWORD dwRec = 0, i = 0;
 
 				TCHAR szDC[255] = TEXT("");
 				MultiByteToWideChar(CP_ACP, 0, pDcInfo->DomainControllerName, -1, (LPWSTR)szDC, 255);
 
-				do
-				{
-					dwRet = NetQueryDisplayInformation((LPCWSTR)szDC, 1, i, 100, MAX_PREFERRED_LENGTH, &dwRec, &pUser);
-
-					if(dwRet == ERROR_SUCCESS || dwRet == ERROR_MORE_DATA)
-					{
-						pU = pUser;
-
-						for(DWORD n = 0; n < dwRec && pU; n++, i = pU->usri1_next_index, pU++)
-						{
-							if(pU->usri1_full_name[0] != L'\0')
-								printf("- %-30ws (%ws) - %-.40ws...\n", pU->usri1_name, pU->usri1_full_name, pU->usri1_comment);
-							else
-								printf("- %-30ws - %-.40ws...\n", pU->usri1_name, (pU->usri1_comment[0] != L'\0' ? pU->usri1_comment : L"N/A"));
-						}
-
-						NetApiBufferFree(pUser);
-
-					} else
-						printf("[-] NetQueryDisplayInformation :: Error retrieving users (%d)", GetLastError());
-
-				} while(dwRet == ERROR_MORE_DATA);
-
-				printf("\n- Listing domain groups:\n");
-				printf("------------------------\n");
-
-				PNET_DISPLAY_GROUP pGroup = NULL, pG = 0;
-				dwRec = 0, i = 0;
-				
 				do
 				{
 					dwRet = NetQueryDisplayInformation((LPCWSTR)szDC, 3, i, 100, MAX_PREFERRED_LENGTH, &dwRec, &pGroup);
@@ -100,6 +71,54 @@ void ListDomainInfo( void )
 						printf("[-] NetQueryDisplayInformation :: Error retrieving groups (%d)", GetLastError());
 				} while(dwRet == ERROR_MORE_DATA);
 
+
+				printf("\n- Listing domain accounts:\n");
+				printf("--------------------------\n");
+
+				PNET_DISPLAY_USER pUser = NULL, pU = NULL;
+				dwRec = 0, i = 0;
+
+				do
+				{
+					dwRet = NetQueryDisplayInformation((LPCWSTR)szDC, 1, i, 100, MAX_PREFERRED_LENGTH, &dwRec, &pUser);
+
+					if(dwRet == ERROR_SUCCESS || dwRet == ERROR_MORE_DATA)
+					{
+						pU = pUser;
+
+						for(DWORD n = 0; n < dwRec && pU; n++, i = pU->usri1_next_index, pU++)
+						{
+							printf("- %ws\n", pU->usri1_name);
+							for(size_t i = 0; i < wcslen(pU->usri1_name) + 2; i++, printf("-")); puts("");
+
+							GROUP_USERS_INFO_0 *pBuf = NULL, *g_p = NULL;
+							DWORD dwGrpRet, g = 0, dwGrpRec, dwGrpTotal;
+
+							do
+							{
+								dwGrpRet = NetUserGetGroups((LPCWSTR)szDC, pU->usri1_name, 0, &(LPBYTE)pBuf, MAX_PREFERRED_LENGTH, &dwGrpRec, &dwGrpTotal);
+
+								if(dwGrpRet == ERROR_SUCCESS || dwGrpRet == ERROR_MORE_DATA)
+								{
+									g_p = pBuf;
+
+									for(DWORD n_g = 0; n_g < dwGrpRec; n_g++, g_p++)
+										printf("-- %ws\n", g_p->grui0_name);
+								}
+
+								NetApiBufferFree(pBuf);
+
+							} while(dwGrpRet == ERROR_MORE_DATA);
+
+							puts("");
+						}
+
+						NetApiBufferFree(pUser);
+
+					} else
+						printf("[-] NetQueryDisplayInformation :: Error retrieving users (%d)", GetLastError());
+
+				} while(dwRet == ERROR_MORE_DATA);
 			}
 		}
 
