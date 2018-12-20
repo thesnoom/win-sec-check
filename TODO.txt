@@ -34,6 +34,12 @@ SECURITY:
 	- Autologon User Credential
 	- Tokens?
 
+	LOOK AT
+	C:\Users\XXXX\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline
+	C:\Users\XXXX\AppData\Roaming\Microsoft\Office\Recent
+	https://forensicswiki.org/wiki/List_of_Windows_MRU_Locations
+	HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ << installed programs
+
 
 https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
 https://toshellandback.com/2015/11/24/ms-priv-esc/
