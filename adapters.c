@@ -90,7 +90,7 @@ void DisplayLocalAdapters( void )
 			pGwAddr = pCurrAddr->FirstGatewayAddress;
 			if(pGwAddr)
 			{
-				int nlen = 0; 
+				size_t nlen = 0; 
 
 				while(pGwAddr)
 				{

@@ -36,7 +36,7 @@ void DisplayCoreInfo( void )
 	char szCpuInfo[64] = { 0 };
 	unsigned regs[4] = { 0 };
 
-	__asm
+	/*__asm		// Doesn't work on x64... MSVC disabled inline x64 support. ;_;
 	{
 		pushad
 
@@ -49,6 +49,14 @@ void DisplayCoreInfo( void )
 
 		Nope:
 		popad
+	}*/
+
+	// https://social.msdn.microsoft.com/Forums/en-US/3a771604-5a21-4170-8177-9f37c71be81f/hyperthreading-with-intel-processors-with-x64-bit-vc-application?forum=vclanguage
+	if((__cpuid(regs, 0), regs[0]) > 0)
+	{
+		__cpuid(regs, 1);
+
+		nHyper = (regs[3] & ( 1 << 28 )) != 0;
 	}
 
 	// Query extended identifiers
@@ -248,7 +256,11 @@ void DisplayProcesses( void )
 
 					printf("- %-8d - %-25s - %-45ws\n", (DWORD)pSysProcInf->UniqueProcessId, szProcUser, (pSysProcInf->ImageName.Length ? pSysProcInf->ImageName.Buffer : L"N/A"));
 					
+#ifdef _WIN64
+					pSysProcInf = (SYSTEM_PROCESS_INFORMATION *)((ULONGLONG)pSysProcInf + (ULONGLONG)pSysProcInf->NextEntryOffset);
+#else
 					pSysProcInf = (SYSTEM_PROCESS_INFORMATION *)((DWORD)pSysProcInf + (DWORD)pSysProcInf->NextEntryOffset);
+#endif
 				}
 			} 
 
