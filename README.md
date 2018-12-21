@@ -15,7 +15,7 @@ The reason for this is to evade detection and have full compatibility. A lot of 
 ### So far:
 - **List System Information**:
 
-   *System Version, Service Pack, CPU Info.*
+   *System Version, Service Pack, CPU Info, Installed Applications.*
 - **Adapter Information**:
 
    *Each internet adapter, DNS entries + Gateway information.*

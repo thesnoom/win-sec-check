@@ -24,6 +24,7 @@
 #include "domain.h"
 #include "services.h"
 #include "descriptors.h"
+#include "applications.h"
 
 
 unsigned long dwDomainFlags;
@@ -138,6 +139,30 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 
 
+
+
+	// ------------------------------------------------
+	// Installed Applications
+	// ------------------------------------------------
+	printf("\n[+] Listing installed applications:\n");
+	printf("-----------------------------------\n");
+
+#if _WIN64
+	printf("[+] 32BIT Keys:\n");
+	printf("---------------\n");
+
+	ListInstalledApps(1);
+
+	printf("\n[+] 64BIT Keys:\n");
+	printf("---------------\n");
+
+	ListInstalledApps(0);
+#else
+	ListInstalledApps(0);
+#endif
+	// ------------------------------------------------
+	// ------------------------------------------------
+	
 
 
 	// ------------------------------------------------
