@@ -108,7 +108,7 @@ void DisplayLocalAdapters( void )
 					pGwAddr = pGwAddr->Next;
 				}
 
-				for(int i = 0; i < nlen; printf("-"), i++); puts("");
+				for(size_t i = 0; i < nlen; printf("-"), i++); puts("");
 			}
 
 			pCurrAddr = pCurrAddr->Next;

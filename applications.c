@@ -29,6 +29,12 @@ BOOL FolderExists(LPCTSTR szPath)
 }
 
 
+BOOL ResolveLink(LPCTSTR szPath)
+{
+	return TRUE;
+}
+
+
 void ListInstalledApps( int b32BitApps )
 {
 	HKEY hkApps;

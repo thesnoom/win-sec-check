@@ -12,6 +12,7 @@
 
 BOOL FileExists( LPCTSTR szPath );
 BOOL FolderExists( LPCTSTR szPath );
+BOOL ResolveLink( LPCTSTR szPath );
 void ListInstalledApps( int b32BitApps );
 
 #endif

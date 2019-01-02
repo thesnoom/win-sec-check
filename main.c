@@ -41,6 +41,8 @@ int main(int argc, char **argv)
 			"+        @GitHub        +\n"
 			"+-----------------------+\n\n" );
 
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
 	// ------------------------------------------------
 	// System Information
 	// ------------------------------------------------
@@ -204,7 +206,7 @@ int main(int argc, char **argv)
 		{
 			do
 			{
-				if(w32Find.cFileName == '.' || w32Find.cFileName == '..')
+				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
 					continue;
 
 				printf("- Found: %s\n", w32Find.cFileName);
@@ -230,7 +232,7 @@ int main(int argc, char **argv)
 		{
 			do
 			{
-				if(w32Find.cFileName == '.' || w32Find.cFileName == '..')
+				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
 					continue;
 
 				printf("- Found: %s\n", w32Find.cFileName);
@@ -288,6 +290,8 @@ int main(int argc, char **argv)
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------
+
+	CoUninitialize();
 
 	getch();
 
