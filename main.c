@@ -186,16 +186,32 @@ int main(int argc, char **argv)
 		printf("- PowerShell history not found\n");
 
 
-
 	printf("\n[+] Office recent files:\n");
 	printf("-----------------------------------\n");
 	ZeroMemory(szFilePath, 256);
 	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Office\\Recent", szProfileDir);
 
+	HANDLE hFind;
+	WIN32_FIND_DATA w32Find;
+
 	if(FolderExists(szFilePath))
 	{
-		// Loop folder....
-		printf("Office recent exists\n");
+		strncat_s(szFilePath, 256, "\\*", 3);
+
+		hFind = FindFirstFile(szFilePath, &w32Find);
+
+		if(hFind != INVALID_HANDLE_VALUE)
+		{
+			do
+			{
+				if(w32Find.cFileName == '.' || w32Find.cFileName == '..')
+					continue;
+
+				printf("- Found: %s\n", w32Find.cFileName);
+			} while(FindNextFile(hFind, &w32Find));
+		}
+
+		FindClose(hFind);
 	}
 
 
@@ -206,10 +222,23 @@ int main(int argc, char **argv)
 	
 	if(FolderExists(szFilePath))
 	{
-		// Loop folder...
-		printf("Windows recent exists\n");
-	}
+		strncat_s(szFilePath, 256, "\\*", 3);
 
+		hFind = FindFirstFile(szFilePath, &w32Find);
+
+		if(hFind != INVALID_HANDLE_VALUE)
+		{
+			do
+			{
+				if(w32Find.cFileName == '.' || w32Find.cFileName == '..')
+					continue;
+
+				printf("- Found: %s\n", w32Find.cFileName);
+			} while(FindNextFile(hFind, &w32Find));
+		}
+
+		FindClose(hFind);
+	}
 	// ------------------------------------------------
 	// ------------------------------------------------
 
