@@ -11,9 +11,11 @@
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "netapi32.lib")
+#pragma comment(lib, "userenv.lib")
 
 
 #include <Windows.h>
+#include <UserEnv.h>
 #include <stdio.h>
 
 #include "main.h"
@@ -162,7 +164,56 @@ int main(int argc, char **argv)
 #endif
 	// ------------------------------------------------
 	// ------------------------------------------------
+
+
+
+
+	// ------------------------------------------------
+	// Application Specific Findings
+	// ------------------------------------------------
+	char szProfileDir[128] = { 0 }, szFilePath[256] = { 0 };
+	DWORD dwProfileLen = 128;
+	GetUserProfileDirectoryA(GetCurrentProcessToken(), szProfileDir, &dwProfileLen);
+
+	printf("\n[+] PowerShell history:\n");
+	printf("-----------------------------------\n");
+
+	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt", szProfileDir);
 	
+	if(FileExists(szFilePath))
+		printf("- PowerShell history found: %s\n", szFilePath);
+	else
+		printf("- PowerShell history not found\n");
+
+
+
+	printf("\n[+] Office recent files:\n");
+	printf("-----------------------------------\n");
+	ZeroMemory(szFilePath, 256);
+	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Office\\Recent", szProfileDir);
+
+	if(FolderExists(szFilePath))
+	{
+		// Loop folder....
+		printf("Office recent exists\n");
+	}
+
+
+	printf("\n[+] Start-menu recent files:\n");
+	printf("-----------------------------------\n");
+	ZeroMemory(szFilePath, 256);
+	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\Recent", szProfileDir);
+	
+	if(FolderExists(szFilePath))
+	{
+		// Loop folder...
+		printf("Windows recent exists\n");
+	}
+
+	// ------------------------------------------------
+	// ------------------------------------------------
+
+
 
 
 	// ------------------------------------------------

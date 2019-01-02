@@ -35,10 +35,8 @@ SECURITY:
 	- Tokens?
 
 	LOOK AT
-	C:\Users\XXXX\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline
 	C:\Users\XXXX\AppData\Roaming\Microsoft\Office\Recent
-	https://forensicswiki.org/wiki/List_of_Windows_MRU_Locations
-	HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ << installed programs
+	C:\Users\XXXX\AppData\Roaming\Microsoft\Windows\Recent
 
 
 https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
