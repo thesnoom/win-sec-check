@@ -18,6 +18,8 @@
 #include <UserEnv.h>
 #include <stdio.h>
 
+#include "getopt.h"
+
 #include "main.h"
 #include "sysinfo.h"
 #include "token.h"
@@ -40,6 +42,85 @@ int main(int argc, char **argv)
 			"+      - thesnoom       +\n"
 			"+        @GitHub        +\n"
 			"+-----------------------+\n\n" );
+
+	// Default option will display system information.
+	static struct option long_opts[] =
+	{
+		{"help",		no_argument, 0, 'h'},	// Help
+		{"all",			no_argument, 0, 'a'},	// All Functions
+		{"user",		no_argument, 0, 'u'},	// User Information
+		{"path",		no_argument, 0, 'p'},	// Path Expansion
+		{"tokens",		no_argument, 0, 't'},	// Tokens
+		{"processes",	no_argument, 0, 'r'},	// Processes
+		{"apps",		no_argument, 0, 'i'},	// Installed Applications
+		{"recentfiles",	no_argument, 0, 'f'},	// Recently Used Files.
+		{"dominfo",		no_argument, 0, 'd'},	// Recently Used Files.
+		{"localinfo",	no_argument, 0, 'l'},	// Recently Used Files.
+		{0, 0, 0, 0}
+	};
+
+	int opt_idx = 0, c = 0;
+
+	while((c = getopt_long(argc, argv, "v", long_opts, &opt_idx)) != -1)
+	{
+		switch(c)
+		{
+			case 'h':
+			{
+				return 0;
+			}
+
+			case 'a':
+			{
+				return 0;
+			}
+
+			case 'u':
+			{
+				return 0;
+			}
+
+			case 'p':
+			{
+				return 0;
+			}
+
+			case 't':
+			{
+				return 0;
+			}
+
+			case 'r':
+			{
+				return 0;
+			}
+
+			case 'i':
+			{
+				return 0;
+			}
+
+			case 'f':
+			{
+				return 0;
+			}
+
+			case 'd':
+			{
+				return 0;
+			}
+
+			case 'l':
+			{
+				return 0;
+			}
+
+			default:
+			{
+				return 0;
+			}
+		}
+	}
 
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
