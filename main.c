@@ -188,7 +188,7 @@ int main(int argc, char **argv)
 		printf("- PowerShell history not found\n");
 
 
-	printf("\n[+] Office recent files:\n");
+	printf("\n[+] Active office recent files:\n");
 	printf("-----------------------------------\n");
 	ZeroMemory(szFilePath, 256);
 	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Office\\Recent", szProfileDir);
@@ -209,7 +209,14 @@ int main(int argc, char **argv)
 				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
 					continue;
 
-				printf("- Found: %s\n", w32Find.cFileName);
+				wchar_t *wszResolved;
+
+				if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
+				{
+					printf("- %ws\n", wszResolved);
+					free(wszResolved);
+				}
+
 			} while(FindNextFile(hFind, &w32Find));
 		}
 
@@ -217,7 +224,7 @@ int main(int argc, char **argv)
 	}
 
 
-	printf("\n[+] Start-menu recent files:\n");
+	printf("\n[+] Active start-menu recent files:\n");
 	printf("-----------------------------------\n");
 	ZeroMemory(szFilePath, 256);
 	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\Recent", szProfileDir);
@@ -234,8 +241,15 @@ int main(int argc, char **argv)
 			{
 				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
 					continue;
+				
+				wchar_t *wszResolved;
 
-				printf("- Found: %s\n", w32Find.cFileName);
+				if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
+				{
+					printf("- %ws\n", wszResolved);
+					free(wszResolved);
+				}
+
 			} while(FindNextFile(hFind, &w32Find));
 		}
 
