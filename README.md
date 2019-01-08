@@ -38,6 +38,12 @@ The reason for this is to evade detection and have full compatibility. A lot of 
 - **Running Processes**:
 
    *PID, User, Image name*
+- **Installed Applications**:
+
+   *32bit and 64bit registry keys (dependant on version ran)*
+- **Recent Files**:
+
+   *PowerShell history, Office, Windows Recent Files*
 - **Local Information**
 
    *Local user accounts*
@@ -322,6 +328,48 @@ TESTDOMAIN\w.ten - F
 - 4508     - w.ten                     - RuntimeBroker.exe
 - 7576     - w.ten                     - WinSecCheck.exe
 - 7616     - w.ten                     - conhost.exe
+
+[+] Listing installed applications:
+-----------------------------------
+[+] 32BIT Keys:
+---------------
+- Visual Studio Community 2017
+- GNU Privacy Guard
+- KeePass Password Safe 2.40
+- NordVPN
+- NVIDIA Stereoscopic 3D Driver
+- VB Decompiler Lite
+<snip>
+
+[+] 64BIT Keys:
+---------------
+- Burp Suite Professional 2.0.12beta
+- HxD Hex Editor 2.1
+- IDA Freeware v7.0
+- Mozilla Maintenance Service
+<snip>
+
+[+] PowerShell history:
+-----------------------------------
+- PowerShell history found: C:\Users\Consultant\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+
+[+] Active office recent files:
+-----------------------------------
+- E:\<snip>.docx
+- E:\<snip>\<snip>.docx
+
+
+[+] Active start-menu recent files:
+-----------------------------------
+- \\unc\link\<snip>\<snip>
+- \\unc\link\<snip>.xlsx
+- E:\<snip>\<snip>
+- C:\Users\Consultant\Documents\vsprojs
+- C:\Users\Consultant\Documents\vsprojs
+- C:\Users\Consultant\Documents\vsprojs
+- C:\Users\Consultant\Documents\vsprojs\WinSecCheck
+- C:\Users\Consultant\Documents\vsprojs\WinSecCheck.sln
+- C:\Users\Consultant\Documents\vsprojs\WinSecCheck\WinSecCheck.vcxproj
 
 [+] Listing local user accounts:
 --------------------------------
