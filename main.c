@@ -155,6 +155,7 @@ int main(int argc, char **argv)
 	if(optind <= 1 || disp_once)
 		help();
 
+
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
 
@@ -201,11 +202,10 @@ int main(int argc, char **argv)
 
 
 
-
 	// ------------------------------------------------
 	// Network Adapter Information
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_ADAPTS)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_ADAPTS))
 	{
 		printf("\n[+] Listing network adapter information:\n");
 		printf("----------------------------------------\n");
@@ -215,10 +215,12 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 
 
+
+
 	// ------------------------------------------------
 	// Current User Information
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_USER)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_USER))
 	{
 		printf("\n[+] Listing current user information:\n");
 		printf("-------------------------------------\n");
@@ -248,10 +250,13 @@ int main(int argc, char **argv)
 
 		ListGroupsFromProc(hCurrProc);
 
+		HeapFree(GetProcessHeap(), 0, szUser);
+		HeapFree(GetProcessHeap(), 0, szDomain);
+
 		CloseHandle(hCurrProc);
 	}
 
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_PATH)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_PATH))
 		DisplayPATH();
 	// ------------------------------------------------
 	// ------------------------------------------------
@@ -259,12 +264,10 @@ int main(int argc, char **argv)
 
 
 
-
-
 	// ------------------------------------------------
 	// Current Process Privileges
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_TOKENS)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_TOKENS))
 	{
 		printf("\n[+] Listing current process privileges:\n");
 		printf("---------------------------------------\n");
@@ -280,7 +283,7 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Running Processes
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_PROCS)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_PROCS))
 	{
 		printf("\n[+] Listing running processes:\n");
 		printf("------------------------------\n");
@@ -296,7 +299,7 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Installed Applications
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_APPS)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_APPS))
 	{
 		printf("\n[+] Listing installed applications:\n");
 		printf("-----------------------------------\n");
@@ -324,7 +327,7 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Application Specific Findings
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_RECENT)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_RECENT))
 	{
 		char szProfileDir[128] = { 0 }, szFilePath[256] = { 0 };
 		DWORD dwProfileLen = 128;
@@ -416,43 +419,9 @@ int main(int argc, char **argv)
 
 
 	// ------------------------------------------------
-	// Local Users & Groups ( If DC it lists domain users... )
-	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_LOC)
-	{
-		if(dwDomainFlags & WSC_DOMAINDC)
-		{
-			printf("\n[+] Listing domain user accounts:\n");
-			printf("---------------------------------\n");
-
-			LocalInformation(_LOCAL_USERS);
-
-			printf("\n[+] Listing domain groups:\n");
-			printf("--------------------------\n");
-
-			LocalInformation(_LOCAL_GROUPS);
-		} else {
-			printf("\n[+] Listing local user accounts:\n");
-			printf("--------------------------------\n");
-
-			LocalInformation(_LOCAL_USERS);
-
-			printf("\n[+] Listing local groups:\n");
-			printf("-------------------------\n");
-
-			LocalInformation(_LOCAL_GROUPS);
-		}
-	}
-	// ------------------------------------------------
-	// ------------------------------------------------
-
-
-
-
-	// ------------------------------------------------
 	// Domain Controllers, Users & Groups.
 	// ------------------------------------------------
-	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_DOM)
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_DOM))
 	{
 		if((dwDomainFlags & WSC_DOMAINJOINED) && !(dwDomainFlags & WSC_DOMAINDC))
 		{
@@ -461,9 +430,41 @@ int main(int argc, char **argv)
 
 			ListDomainInfo();
 		}
+
+		// Ran on domain DC asking domain info, apply LOC flag instead. 
+		if((dwDomainFlags & WSC_DOMAINJOINED) && !(dwDomainFlags & WSC_DOMAINDC) && !(dwOptFlags & OPTS_LOC))
+			dwOptFlags |= OPTS_LOC;
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------
+
+
+
+
+	// ------------------------------------------------
+	// Local Users & Groups ( If DC it lists domain users... )
+	// ------------------------------------------------
+	if((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_LOC))
+	{
+		char *szType;
+		if(dwDomainFlags & WSC_DOMAINDC)
+			szType = "domain";
+		else
+			szType = "local";
+
+		printf("\n[+] Listing %s user accounts:\n", szType);
+		printf("---------------------------------\n");
+
+		LocalInformation(_LOCAL_USERS);
+
+		printf("\n[+] Listing %s groups:\n", szType);
+		printf("--------------------------\n");
+
+		LocalInformation(_LOCAL_GROUPS);
+	}
+	// ------------------------------------------------
+	// ------------------------------------------------
+
 
 	CoUninitialize();
 
