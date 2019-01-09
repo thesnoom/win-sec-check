@@ -485,7 +485,7 @@ void help()
 			"-t, --tokens:\t\tCurrent user token privileges.\n"
 			"-p, --processes:\tCurrent running processes (PID/User/ImageName).\n"
 			"-a, --apps:\t\tInstalled applications (x86/x64).\n"
-			"-r, --recentfiles:\tRecently used files, office, start-menu, PS history.\n"
+			"-r, --recentfiles:\tRecently used files - office, start-menu, PS history.\n"
 			"-d, --dominfo:\t\tDomain information (Users & Groups).\n"
 			"-l, --localinfo:\tLocal information (User & Groups).\n"
 			"-n, --adapters:\t\tNetwork Adapter information (Gateway/IP/DNS).\n\n" );
