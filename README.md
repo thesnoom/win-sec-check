@@ -69,6 +69,25 @@ Thanks for reading this. Contribute, criticise, use. All are welcome.
 
 - Snoom
 
+## Usage
+```
+C:\...> .\WinSecCheck.exe
+usage: WinSecCheck [-A] | [-uPtpardln]
+
+Arguments:
+-h, --help:             Display(this);
+-A, --all:              Display everything.
+-u, --user:             User information (PC/Domain & Groups)
+-P, --path:             Path variable + DACL information
+-t, --tokens:           Current user token privileges
+-p, --processes:        Current running processes (PID/User/ImageName)
+-a, --apps:             Installed applications (x86/x64)
+-r, --recentfiles:      Recently used files, office, start-menu, PS history.
+-d, --dominfo:          Domain information (Users & Groups)
+-l, --localinfo:        Local information (User & Groups)
+-n, --adapters:         Network Adapter information (Gateway/IP/DNS)
+```
+
 # Credit
 - MSDN
 - Stackoverflow
