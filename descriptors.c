@@ -46,7 +46,7 @@ ACL *GetObjectDacl( HANDLE hObject, SE_OBJECT_TYPE ObjectType, SECURITY_DESCRIPT
 
 
 // Print out the ACL by account and permissions.
-void PrintPathDacl( ACL *pDacl )
+void PrintDacl( ACL *pDacl )
 {
 	for(int i = 0; i < pDacl->AceCount; i++)
 	{

@@ -13,6 +13,6 @@
 #include <AclAPI.h>
 
 ACL *GetObjectDacl( HANDLE hObject, SE_OBJECT_TYPE ObjectType, SECURITY_DESCRIPTOR **pDescOut );
-void PrintPathDacl( ACL *pDacl );
+void PrintDacl( ACL *pDacl );
 
 #endif

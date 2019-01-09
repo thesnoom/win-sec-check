@@ -305,7 +305,7 @@ void DisplayPATH( void )
 				if(bIsPresent && pDacl == NULL)
 					printf("NULL dacl! Everyone - F...");
 				else
-					PrintPathDacl(pDacl);
+					PrintDacl(pDacl);
 
 
 				LocalFree(pDesc);
