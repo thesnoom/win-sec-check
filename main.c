@@ -432,7 +432,7 @@ int main(int argc, char **argv)
 		}
 
 		// Ran on domain DC asking domain info, apply LOC flag instead. 
-		if((dwDomainFlags & WSC_DOMAINJOINED) && !(dwDomainFlags & WSC_DOMAINDC) && !(dwOptFlags & OPTS_LOC))
+		if((dwDomainFlags & WSC_DOMAINDC) && !(dwOptFlags & OPTS_LOC))
 			dwOptFlags |= OPTS_LOC;
 	}
 	// ------------------------------------------------
