@@ -2,17 +2,6 @@ INFORMATIONAL:
 	- Get patch information (complete fuck on?)
 	- attempt to get SeDebugPrivilege
 
-	- Get users & Groups
-		- NetQueryDisplayInformation / NetUserEnum / NetGroupEnum
-		- NetUserGetLocalGroups
-		- NetLocalGroupEnum && NetLocalGroupGetMembers
-	
-	NetGetAnyDCName / NetGetDCName / DsGetDcName
-	- Is domain connected & List DCs? - NetServerEnum / DsEnumerateDomainTrustsA
-		- Get domain groups && users
-			- http://ivbel.blogspot.com/2012/01/how-to-list-all-users-groups-of-domain.html		
-			- NetUseEnum - Servers connected to local
-
 SECURITY:
 	- Insecure services
 		- Unquoted Paths
@@ -32,11 +21,6 @@ SECURITY:
 	- Process list
 	- Named pipes
 	- Autologon User Credential
-	- Tokens?
-
-	LOOK AT
-	C:\Users\XXXX\AppData\Roaming\Microsoft\Office\Recent
-	C:\Users\XXXX\AppData\Roaming\Microsoft\Windows\Recent
 
 
 https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
