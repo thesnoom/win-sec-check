@@ -1,5 +1,5 @@
 /*
- * token.h
+ * descriptors.c
  *
  * WinSecCheck.
  *
@@ -14,6 +14,7 @@
 #include "descriptors.h"
 
 
+// Retrieve an objects Descriptor ACL.
 ACL *GetObjectDacl( HANDLE hObject, SE_OBJECT_TYPE ObjectType, SECURITY_DESCRIPTOR **pDescOut )
 {
 	if(!hObject)
@@ -44,6 +45,7 @@ ACL *GetObjectDacl( HANDLE hObject, SE_OBJECT_TYPE ObjectType, SECURITY_DESCRIPT
 }
 
 
+// Print out the ACL by account and permissions.
 void PrintPathDacl( ACL *pDacl )
 {
 	for(int i = 0; i < pDacl->AceCount; i++)

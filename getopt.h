@@ -76,7 +76,7 @@ extern "C" {
 #define	REPLACE_GETOPT		/* use this getopt as the system getopt(3) */
 
 #ifdef REPLACE_GETOPT
-	int	opterr = 1;		/* if error message should be printed */
+	int	opterr = 0;		/* if error message should be printed */
 	int	optind = 1;		/* index into parent argv vector */
 	int	optopt = '?';		/* character checked for validity */
 #undef	optreset		/* see getopt.h */

@@ -1,5 +1,5 @@
 /*
- * adapters.h
+ * adapters.c
  *
  * WinSecCheck.
  *

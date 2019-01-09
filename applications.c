@@ -14,6 +14,7 @@
 #include "applications.h"
 
 
+// Check attributes for file.
 BOOL FileExists(char *szPath)
 {
 	DWORD dwAttrib = GetFileAttributes(szPath);
@@ -22,6 +23,7 @@ BOOL FileExists(char *szPath)
 }
 
 
+// Check attributes for folder.
 BOOL FolderExists(char *szPath)
 {
 	DWORD dwAttrib = GetFileAttributes(szPath);
@@ -99,6 +101,7 @@ BOOL ResolveLink(char *szPath, char *szFile, wchar_t **wszOut)
 }
 
 
+// Loop the registry keys and print out officially installed apps.
 void ListInstalledApps( int b32BitApps )
 {
 	HKEY hkApps;

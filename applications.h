@@ -1,5 +1,5 @@
 /*
- * sysinfo.h
+ * applications.h
  *
  * WinSecCheck.
  *

@@ -32,107 +32,148 @@
 
 
 unsigned long dwDomainFlags;
+unsigned long dwOptFlags = 0x00;
 
+static disp_once = 0;
 
 int main(int argc, char **argv)
 {
-	printf( "+-----------------------+\n"
-			"+      WinSecCheck      +\n"
-			"+-----------------------+\n"
-			"+      - thesnoom       +\n"
-			"+        @GitHub        +\n"
-			"+-----------------------+\n\n" );
-
-	// Default option will display system information.
 	static struct option long_opts[] =
 	{
 		{"help",		no_argument, 0, 'h'},	// Help
-		{"all",			no_argument, 0, 'a'},	// All Functions
+		{"all",			no_argument, 0, 'A'},	// All Functions
 		{"user",		no_argument, 0, 'u'},	// User Information
-		{"path",		no_argument, 0, 'p'},	// Path Expansion
+		{"path",		no_argument, 0, 'P'},	// Path Expansion
 		{"tokens",		no_argument, 0, 't'},	// Tokens
-		{"processes",	no_argument, 0, 'r'},	// Processes
-		{"apps",		no_argument, 0, 'i'},	// Installed Applications
-		{"recentfiles",	no_argument, 0, 'f'},	// Recently Used Files.
-		{"dominfo",		no_argument, 0, 'd'},	// Recently Used Files.
-		{"localinfo",	no_argument, 0, 'l'},	// Recently Used Files.
+		{"processes",	no_argument, 0, 'p'},	// Processes
+		{"apps",		no_argument, 0, 'a'},	// Installed Applications
+		{"recentfiles",	no_argument, 0, 'r'},	// Recently Used Files
+		{"dominfo",		no_argument, 0, 'd'},	// Domain User/Group Information
+		{"localinfo",	no_argument, 0, 'l'},	// Local User/Group Information
+		{"adapters",	no_argument, 0, 'n'},	// Adapter Information
 		{0, 0, 0, 0}
 	};
 
 	int opt_idx = 0, c = 0;
 
-	while((c = getopt_long(argc, argv, "v", long_opts, &opt_idx)) != -1)
+	while((c = getopt_long(argc, argv, "hAuPtpardln", long_opts, &opt_idx)) != -1)
 	{
 		switch(c)
 		{
 			case 'h':
 			{
-				return 0;
+				help();
+				break;
 			}
 
-			case 'a':
+			case 'A':
 			{
-				return 0;
+				dwOptFlags |= OPTS_ALL;
+				break;
 			}
 
 			case 'u':
 			{
-				return 0;
+				dwOptFlags |= OPTS_USER;
+				break;
 			}
 
-			case 'p':
+			case 'P':
 			{
-				return 0;
+				dwOptFlags |= OPTS_PATH;
+				break;
 			}
 
 			case 't':
 			{
-				return 0;
+				dwOptFlags |= OPTS_TOKENS;
+				break;
+			}
+
+			case 'p':
+			{
+				dwOptFlags |= OPTS_PROCS;
+				break;
+			}
+
+			case 'a':
+			{
+				dwOptFlags |= OPTS_APPS;
+				break;
 			}
 
 			case 'r':
 			{
-				return 0;
-			}
-
-			case 'i':
-			{
-				return 0;
-			}
-
-			case 'f':
-			{
-				return 0;
+				dwOptFlags |= OPTS_RECENT;
+				break;
 			}
 
 			case 'd':
 			{
-				return 0;
+				dwOptFlags |= OPTS_DOM;
+				break;
 			}
 
 			case 'l':
 			{
-				return 0;
+				dwOptFlags |= OPTS_LOC;
+				break;
+			}
+
+			case 'n':
+			{
+				dwOptFlags |= OPTS_ADAPTS;
+				break;
 			}
 
 			default:
+			case '?':
 			{
-				return 0;
+				if(!disp_once)
+				{
+					printf("Invalid option(s): ");
+					disp_once++;
+				}
+
+				if(optopt)
+					printf("%c", optopt);
+				else
+					printf("%s ", argv[optind - 1]);
+
+				break;
 			}
 		}
 	}
 
+	if(disp_once)
+		puts("");
+
+	for(int n = optind; optind < argc; n++)
+		if(argv[n])
+			printf("Invalid argument: %s\n", argv[n]);
+
+	if(optind <= 1 || disp_once)
+		help();
+
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
+
+	printf("+-----------------------+\n"
+		   "+      WinSecCheck      +\n"
+		   "+-----------------------+\n"
+		   "+      - thesnoom       +\n"
+		   "+        @GitHub        +\n"
+		   "+-----------------------+\n\n");
+
+
 	// ------------------------------------------------
-	// System Information
+	// System Information  ( ALWAYS SHOWN )
 	// ------------------------------------------------
 	printf("[+] Listing system information:\n");
 	printf("-------------------------------\n");
 
 	DisplayWinVerInfo();
 	DisplayCoreInfo();
-	DisplayLocalAdapters();
 
 	char szDomTest[256] = { 0 }, szDomFQ[256] = { 0 };
 	DWORD dwDomLen = 256;
@@ -160,42 +201,62 @@ int main(int argc, char **argv)
 
 
 
+
+	// ------------------------------------------------
+	// Network Adapter Information
+	// ------------------------------------------------
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_ADAPTS)
+	{
+		printf("\n[+] Listing network adapter information:\n");
+		printf("----------------------------------------\n");
+		DisplayLocalAdapters();
+	}
+	// ------------------------------------------------
+	// ------------------------------------------------
+
+
 	// ------------------------------------------------
 	// Current User Information
 	// ------------------------------------------------
-	printf("\n[+] Listing current user information:\n");
-	printf("-------------------------------------\n");
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_USER)
+	{
+		printf("\n[+] Listing current user information:\n");
+		printf("-------------------------------------\n");
 	
-	char *szUser = (char *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 64);
-	if(!szUser)
-	{
-		printf("[-] HeapAlloc :: Error allocating space (%d).\n", GetLastError());
-		exit(-1);
+		char *szUser = (char *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 64);
+		if(!szUser)
+		{
+			printf("[-] HeapAlloc :: Error allocating space (%d).\n", GetLastError());
+			exit(-1);
+		}
+
+		char *szDomain = (char *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256);
+		if(!szDomain)
+		{
+			printf("[-] HeapAlloc :: Error allocating space (%d).\n", GetLastError());
+			HeapFree(GetProcessHeap(), 0, szUser);
+			exit(-1);
+		}
+
+		HANDLE hCurrProc = GetCurrentProcess();
+
+		if(!UserFromProc(hCurrProc, szUser, szDomain))
+			printf("[-] UserFromToken :: Error retrieving username from token (%d).\n", GetLastError());
+
+		printf("- %-16s %s\\\\%s\n", "Token User:", szDomain, szUser);
+		for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); printf("-"), i++); puts("");
+
+		ListGroupsFromProc(hCurrProc);
+
+		CloseHandle(hCurrProc);
 	}
 
-	char *szDomain = (char *)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 256);
-	if(!szDomain)
-	{
-		printf("[-] HeapAlloc :: Error allocating space (%d).\n", GetLastError());
-		HeapFree(GetProcessHeap(), 0, szUser);
-		exit(-1);
-	}
-
-	HANDLE hCurrProc = GetCurrentProcess();
-
-	if(!UserFromProc(hCurrProc, szUser, szDomain))
-		printf("[-] UserFromToken :: Error retrieving username from token (%d).\n", GetLastError());
-
-	printf("- %-16s %s\\\\%s\n", "Token User:", szDomain, szUser);
-	for(size_t i = 0; i < (21 + strlen(szDomain) + strlen(szUser)); printf("-"), i++); puts("");
-
-	ListGroupsFromProc(hCurrProc);
-
-	CloseHandle(hCurrProc);
-
-	DisplayPATH();
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_PATH)
+		DisplayPATH();
 	// ------------------------------------------------
 	// ------------------------------------------------
+
+
 
 
 
@@ -203,10 +264,13 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Current Process Privileges
 	// ------------------------------------------------
-	printf("\n[+] Listing current process privileges:\n");
-	printf("---------------------------------------\n");
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_TOKENS)
+	{
+		printf("\n[+] Listing current process privileges:\n");
+		printf("---------------------------------------\n");
 
-	LoopTokens();
+		LoopTokens();
+	}
 	// ------------------------------------------------
 	// ------------------------------------------------
 
@@ -216,10 +280,13 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Running Processes
 	// ------------------------------------------------
-	printf("\n[+] Listing running processes:\n");
-	printf("------------------------------\n");
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_PROCS)
+	{
+		printf("\n[+] Listing running processes:\n");
+		printf("------------------------------\n");
 
-	DisplayProcesses();
+		DisplayProcesses();
+	}
 	// ------------------------------------------------
 	// ------------------------------------------------
 
@@ -229,22 +296,25 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Installed Applications
 	// ------------------------------------------------
-	printf("\n[+] Listing installed applications:\n");
-	printf("-----------------------------------\n");
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_APPS)
+	{
+		printf("\n[+] Listing installed applications:\n");
+		printf("-----------------------------------\n");
 
 #if _WIN64
-	printf("[+] 32BIT Keys:\n");
-	printf("---------------\n");
+		printf("[+] 32BIT Keys:\n");
+		printf("---------------\n");
 
-	ListInstalledApps(1);
+		ListInstalledApps(1);
 
-	printf("\n[+] 64BIT Keys:\n");
-	printf("---------------\n");
+		printf("\n[+] 64BIT Keys:\n");
+		printf("---------------\n");
 
-	ListInstalledApps(0);
+		ListInstalledApps(0);
 #else
-	ListInstalledApps(0);
+		ListInstalledApps(0);
 #endif
+	}
 	// ------------------------------------------------
 	// ------------------------------------------------
 
@@ -254,87 +324,90 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Application Specific Findings
 	// ------------------------------------------------
-	char szProfileDir[128] = { 0 }, szFilePath[256] = { 0 };
-	DWORD dwProfileLen = 128;
-	GetUserProfileDirectoryA(GetCurrentProcessToken(), szProfileDir, &dwProfileLen);
-
-	printf("\n[+] PowerShell history:\n");
-	printf("-----------------------------------\n");
-
-	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt", szProfileDir);
-	
-	if(FileExists(szFilePath))
-		printf("- PowerShell history found: %s\n", szFilePath);
-	else
-		printf("- PowerShell history not found\n");
-
-
-	printf("\n[+] Active office recent files:\n");
-	printf("-----------------------------------\n");
-	ZeroMemory(szFilePath, 256);
-	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Office\\Recent", szProfileDir);
-
-	HANDLE hFind;
-	WIN32_FIND_DATA w32Find;
-
-	if(FolderExists(szFilePath))
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_RECENT)
 	{
-		strncat_s(szFilePath, 256, "\\*", 3);
+		char szProfileDir[128] = { 0 }, szFilePath[256] = { 0 };
+		DWORD dwProfileLen = 128;
+		GetUserProfileDirectoryA(GetCurrentProcessToken(), szProfileDir, &dwProfileLen);
 
-		hFind = FindFirstFile(szFilePath, &w32Find);
+		printf("\n[+] PowerShell history:\n");
+		printf("-----------------------------------\n");
 
-		if(hFind != INVALID_HANDLE_VALUE)
+		snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt", szProfileDir);
+	
+		if(FileExists(szFilePath))
+			printf("- PowerShell history found: %s\n", szFilePath);
+		else
+			printf("- PowerShell history not found\n");
+
+
+		printf("\n[+] Active office recent files:\n");
+		printf("-----------------------------------\n");
+		ZeroMemory(szFilePath, 256);
+		snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Office\\Recent", szProfileDir);
+
+		HANDLE hFind;
+		WIN32_FIND_DATA w32Find;
+
+		if(FolderExists(szFilePath))
 		{
-			do
+			strncat_s(szFilePath, 256, "\\*", 3);
+
+			hFind = FindFirstFile(szFilePath, &w32Find);
+
+			if(hFind != INVALID_HANDLE_VALUE)
 			{
-				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
-					continue;
-
-				wchar_t *wszResolved;
-
-				if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
+				do
 				{
-					printf("- %ws\n", wszResolved);
-					free(wszResolved);
-				}
+					if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
+						continue;
 
-			} while(FindNextFile(hFind, &w32Find));
+					wchar_t *wszResolved;
+
+					if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
+					{
+						printf("- %ws\n", wszResolved);
+						free(wszResolved);
+					}
+
+				} while(FindNextFile(hFind, &w32Find));
+			}
+
+			FindClose(hFind);
 		}
 
-		FindClose(hFind);
-	}
 
-
-	printf("\n[+] Active start-menu recent files:\n");
-	printf("-----------------------------------\n");
-	ZeroMemory(szFilePath, 256);
-	snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\Recent", szProfileDir);
+		printf("\n[+] Active start-menu recent files:\n");
+		printf("-----------------------------------\n");
+		ZeroMemory(szFilePath, 256);
+		snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\Recent", szProfileDir);
 	
-	if(FolderExists(szFilePath))
-	{
-		strncat_s(szFilePath, 256, "\\*", 3);
-
-		hFind = FindFirstFile(szFilePath, &w32Find);
-
-		if(hFind != INVALID_HANDLE_VALUE)
+		if(FolderExists(szFilePath))
 		{
-			do
+			strncat_s(szFilePath, 256, "\\*", 3);
+
+			hFind = FindFirstFile(szFilePath, &w32Find);
+
+			if(hFind != INVALID_HANDLE_VALUE)
 			{
-				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
-					continue;
+				do
+				{
+					if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
+						continue;
 				
-				wchar_t *wszResolved;
+					wchar_t *wszResolved;
 
-				if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
-				{
-					printf("- %ws\n", wszResolved);
-					free(wszResolved);
-				}
+					if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
+					{
+						printf("- %ws\n", wszResolved);
+						free(wszResolved);
+					}
 
-			} while(FindNextFile(hFind, &w32Find));
+				} while(FindNextFile(hFind, &w32Find));
+			}
+
+			FindClose(hFind);
 		}
-
-		FindClose(hFind);
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------
@@ -345,27 +418,30 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Local Users & Groups ( If DC it lists domain users... )
 	// ------------------------------------------------
-	if(dwDomainFlags & WSC_DOMAINDC)
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_LOC)
 	{
-		printf("\n[+] Listing domain user accounts:\n");
-		printf("---------------------------------\n");
+		if(dwDomainFlags & WSC_DOMAINDC)
+		{
+			printf("\n[+] Listing domain user accounts:\n");
+			printf("---------------------------------\n");
 
-		LocalInformation(_LOCAL_USERS);
+			LocalInformation(_LOCAL_USERS);
 
-		printf("\n[+] Listing domain groups:\n");
-		printf("--------------------------\n");
+			printf("\n[+] Listing domain groups:\n");
+			printf("--------------------------\n");
 
-		LocalInformation(_LOCAL_GROUPS);
-	} else {
-		printf("\n[+] Listing local user accounts:\n");
-		printf("--------------------------------\n");
+			LocalInformation(_LOCAL_GROUPS);
+		} else {
+			printf("\n[+] Listing local user accounts:\n");
+			printf("--------------------------------\n");
 
-		LocalInformation(_LOCAL_USERS);
+			LocalInformation(_LOCAL_USERS);
 
-		printf("\n[+] Listing local groups:\n");
-		printf("-------------------------\n");
+			printf("\n[+] Listing local groups:\n");
+			printf("-------------------------\n");
 
-		LocalInformation(_LOCAL_GROUPS);
+			LocalInformation(_LOCAL_GROUPS);
+		}
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------
@@ -376,12 +452,15 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 	// Domain Controllers, Users & Groups.
 	// ------------------------------------------------
-	if((dwDomainFlags & WSC_DOMAINJOINED) && !(dwDomainFlags & WSC_DOMAINDC))
+	if(dwOptFlags & OPTS_ALL || dwOptFlags & OPTS_DOM)
 	{
-		printf("\n[+] Listing domain information:\n");
-		printf("-------------------------------\n");
+		if((dwDomainFlags & WSC_DOMAINJOINED) && !(dwDomainFlags & WSC_DOMAINDC))
+		{
+			printf("\n[+] Listing domain information:\n");
+			printf("-------------------------------\n");
 
-		ListDomainInfo();
+			ListDomainInfo();
+		}
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------
@@ -391,4 +470,25 @@ int main(int argc, char **argv)
 	getch();
 
 	return 0;
+}
+
+
+// Display the help function for teh new guys.
+void help()
+{
+	printf(	"usage: WinSecCheck [-A] | [-uPtpardln]\n\n"
+			"Arguments:\n"
+			"-h, --help:\t\tDisplay(this);\n"
+			"-A, --all:\t\tDisplay everything.\n"
+			"-u, --user:\t\tUser information (PC/Domain & Groups).\n"
+			"-P, --path:\t\tPath variable + DACL information.\n"
+			"-t, --tokens:\t\tCurrent user token privileges.\n"
+			"-p, --processes:\tCurrent running processes (PID/User/ImageName).\n"
+			"-a, --apps:\t\tInstalled applications (x86/x64).\n"
+			"-r, --recentfiles:\tRecently used files, office, start-menu, PS history.\n"
+			"-d, --dominfo:\t\tDomain information (Users & Groups).\n"
+			"-l, --localinfo:\tLocal information (User & Groups).\n"
+			"-n, --adapters:\t\tNetwork Adapter information (Gateway/IP/DNS).\n\n" );
+
+	exit(0);
 }
