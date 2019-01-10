@@ -56,7 +56,27 @@ void FindLnkFiles(char *szPath, char *szExt)
 
 				if(ResolveLink(szPath, w32Find.cFileName, &wszResolved))
 				{
-					printf("- %ws\n", wszResolved);
+					HANDLE hFSize = CreateFileW(wszResolved, FILE_SHARE_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+					if(hFSize)
+					{
+						LARGE_INTEGER lFileSize = { 0 };
+
+						GetFileSizeEx(hFSize, &lFileSize);
+
+						if(lFileSize.QuadPart > 0)
+						{
+							if(lFileSize.QuadPart > 1024)
+								printf("- [FILE] %lldKb - %ws\n", (lFileSize.QuadPart / 1024), wszResolved);
+							else
+								printf("- [FILE] %lldb - %ws\n", lFileSize.QuadPart, wszResolved);
+						} else 
+							printf("- [DIR]  %ws\n", wszResolved);
+
+						CloseHandle(hFSize);
+					} else
+						printf("- [DIR]  %ws\n", wszResolved);
+						
+
 					free(wszResolved);
 				}
 
