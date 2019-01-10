@@ -31,6 +31,43 @@ BOOL FolderExists(char *szPath)
 	return (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
 
+
+void FindLnkFiles(char *szPath, char *szExt)
+{
+	HANDLE hFind;
+	WIN32_FIND_DATA w32Find;
+
+	char szTemp[256] = { 0 };
+
+	if(FolderExists(szPath))
+	{
+		snprintf(szTemp, 256, "%s%s", szPath, szExt);
+
+		hFind = FindFirstFile(szTemp, &w32Find);
+
+		if(hFind != INVALID_HANDLE_VALUE)
+		{
+			do
+			{
+				if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
+					continue;
+
+				wchar_t *wszResolved;
+
+				if(ResolveLink(szPath, w32Find.cFileName, &wszResolved))
+				{
+					printf("- %ws\n", wszResolved);
+					free(wszResolved);
+				}
+
+			} while(FindNextFile(hFind, &w32Find));
+		}
+
+		FindClose(hFind);
+	}
+}
+
+
 // https://stackoverflow.com/questions/35112942/using-ishelllink-bloats-my-executable-to-20kb
 // https://docs.microsoft.com/en-us/windows/desktop/shell/links#resolving-a-shortcut
 BOOL ResolveLink(char *szPath, char *szFile, wchar_t **wszOut)
@@ -49,7 +86,7 @@ BOOL ResolveLink(char *szPath, char *szFile, wchar_t **wszOut)
 	if(path[strlen(path) - 1] == '*')
 		path[strlen(path) - 1] = '\0';
 
-	snprintf(buff, 256, "%s%s", path, szFile);
+	snprintf(buff, 256, "%s\\%s", path, szFile);
 
 	free(path);
 

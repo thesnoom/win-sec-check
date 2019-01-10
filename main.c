@@ -349,68 +349,14 @@ int main(int argc, char **argv)
 		ZeroMemory(szFilePath, 256);
 		snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Office\\Recent", szProfileDir);
 
-		HANDLE hFind;
-		WIN32_FIND_DATA w32Find;
-
-		if(FolderExists(szFilePath))
-		{
-			strncat_s(szFilePath, 256, "\\*", 3);
-
-			hFind = FindFirstFile(szFilePath, &w32Find);
-
-			if(hFind != INVALID_HANDLE_VALUE)
-			{
-				do
-				{
-					if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
-						continue;
-
-					wchar_t *wszResolved;
-
-					if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
-					{
-						printf("- %ws\n", wszResolved);
-						free(wszResolved);
-					}
-
-				} while(FindNextFile(hFind, &w32Find));
-			}
-
-			FindClose(hFind);
-		}
-
+		FindLnkFiles(szFilePath, "\\*.lnk");		
 
 		printf("\n[+] Active start-menu recent files:\n");
 		printf("-----------------------------------\n");
 		ZeroMemory(szFilePath, 256);
 		snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\Recent", szProfileDir);
-	
-		if(FolderExists(szFilePath))
-		{
-			strncat_s(szFilePath, 256, "\\*", 3);
 
-			hFind = FindFirstFile(szFilePath, &w32Find);
-
-			if(hFind != INVALID_HANDLE_VALUE)
-			{
-				do
-				{
-					if(!strcmp(w32Find.cFileName, ".") || !strcmp(w32Find.cFileName, ".."))
-						continue;
-				
-					wchar_t *wszResolved;
-
-					if(ResolveLink(szFilePath, w32Find.cFileName, &wszResolved))
-					{
-						printf("- %ws\n", wszResolved);
-						free(wszResolved);
-					}
-
-				} while(FindNextFile(hFind, &w32Find));
-			}
-
-			FindClose(hFind);
-		}
+		FindLnkFiles(szFilePath, "\\*.lnk");
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------

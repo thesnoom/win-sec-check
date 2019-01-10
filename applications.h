@@ -12,6 +12,7 @@
 
 BOOL FileExists( char *szPath );
 BOOL FolderExists( char *szPath );
+void FindLnkFiles( char *szPath, char *szExt );
 BOOL ResolveLink( char *szPath, char *szFile, wchar_t **wszOut );
 void ListInstalledApps( int b32BitApps );
 
