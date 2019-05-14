@@ -159,9 +159,9 @@ int main(int argc, char **argv)
 		if(argv[n])
 			printf("Invalid argument: %s\n", argv[n]);
 
-	// Commented out during dev
-	//if(optind <= 1 || disp_once)
-	//	help();
+	
+	if(optind <= 1 || disp_once)
+		help();
 
 
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -429,9 +429,6 @@ int main(int argc, char **argv)
 	}
 	// ------------------------------------------------
 	// ------------------------------------------------
-
-	// While making the function
-	GetServices();
 
 	getch();
 
