@@ -50,13 +50,14 @@ int main(int argc, char **argv)
 		{"recentfiles",	no_argument, 0, 'r'},	// Recently Used Files
 		{"dominfo",		no_argument, 0, 'd'},	// Domain User/Group Information
 		{"localinfo",	no_argument, 0, 'l'},	// Local User/Group Information
+		{"serviceinfo",	no_argument, 0, 's'},	// Local User/Group Information
 		{"adapters",	no_argument, 0, 'n'},	// Adapter Information
 		{0, 0, 0, 0}
 	};
 
 	int opt_idx = 0, c = 0;
 
-	while((c = getopt_long(argc, argv, "hAuPtpardln", long_opts, &opt_idx)) != -1)
+	while((c = getopt_long(argc, argv, "hAuPtpardlns", long_opts, &opt_idx)) != -1)
 	{
 		switch(c)
 		{
@@ -120,6 +121,12 @@ int main(int argc, char **argv)
 				break;
 			}
 
+			case 's':
+			{
+				dwOptFlags |= OPTS_SERVICE;
+				break;
+			}
+
 			case 'n':
 			{
 				dwOptFlags |= OPTS_ADAPTS;
@@ -152,8 +159,9 @@ int main(int argc, char **argv)
 		if(argv[n])
 			printf("Invalid argument: %s\n", argv[n]);
 
-	if(optind <= 1 || disp_once)
-		help();
+	// Commented out during dev
+	//if(optind <= 1 || disp_once)
+	//	help();
 
 
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -335,7 +343,7 @@ int main(int argc, char **argv)
 
 		printf("\n[+] PowerShell history:\n");
 		printf("-----------------------------------\n");
-
+		// Check GPO for the local machine to see if powershell transscription is turned on
 		snprintf(szFilePath, 256, "%s\\AppData\\Roaming\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt", szProfileDir);
 	
 		if(FileExists(szFilePath))
@@ -412,9 +420,22 @@ int main(int argc, char **argv)
 	// ------------------------------------------------
 
 
-	CoUninitialize();
+	// ------------------------------------------------
+	// Local services
+	// ------------------------------------------------
+	if ((dwOptFlags & OPTS_ALL) || (dwOptFlags & OPTS_SERVICE))
+	{
+		GetServices();
+	}
+	// ------------------------------------------------
+	// ------------------------------------------------
+
+	// While making the function
+	GetServices();
 
 	getch();
+
+	CoUninitialize();
 
 	return 0;
 }
@@ -435,6 +456,7 @@ void help()
 			"-r, --recentfiles:\tRecently used files - office, start-menu, PS history.\n"
 			"-d, --dominfo:\t\tDomain information (Users & Groups).\n"
 			"-l, --localinfo:\tLocal information (User & Groups).\n"
+			"-s, --serviceinfo:\tService Information.\n"
 			"-n, --adapters:\t\tNetwork Adapter information (Gateway/IP/DNS).\n\n" );
 
 	exit(0);
